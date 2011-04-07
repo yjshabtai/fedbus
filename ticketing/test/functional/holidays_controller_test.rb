@@ -47,20 +47,20 @@ class HolidaysControllerTest < ActionController::TestCase
 
 
   test "should not create holiday for an unauthenticated user" do
-    post :create, :holiday => { :date => "2010-07-09", :trip_offset => "-1" }
+    post :create, :holiday => { :date => "2010-07-09", :offset_date => "2010-07-08" }
     assert_response :redirect
   end
 
   test "should not create holiday for an authenticated user without holidays permission" do
     @request.session[:userid] = users(:one).userid
-    post :create, :holiday => { :date => "2010-07-09", :trip_offset => "-1" }
+    post :create, :holiday => { :date => "2010-07-09", :offset_date => "2010-07-08" }
     assert_response :forbidden
   end
 
   test "should create holiday for authenticated user with the holidays permission" do
     setup_authenticated_user_with_permission :tester, :holidays
     assert_difference('Holiday.count') do
-      post :create, :holiday => { :date => "2010-07-09", :trip_offset => "-1" }
+      post :create, :holiday => { :date => "2010-07-09", :offset_date => "2010-07-08" }
     end
 
     assert_redirected_to holiday_path(assigns(:holiday))
@@ -86,19 +86,19 @@ class HolidaysControllerTest < ActionController::TestCase
 
     
   test "should not update holiday with an unauthenticated user" do
-    put :update, :id => holidays(:one).to_param, :holiday => { :date => "2010-07-09", :trip_offset => "-1" }
+    put :update, :id => holidays(:one).to_param, :holiday => { :date => "2010-07-09", :offset_date => "2010-07-08" }
     assert_response :redirect
   end
 
   test "should not update holiday with an authenticated user without the holidays permission" do
     @request.session[:userid] = users(:one).userid
-    put :update, :id => holidays(:one).to_param, :holiday => { :date => "2010-07-09", :trip_offset => "-1" }
+    put :update, :id => holidays(:one).to_param, :holiday => { :date => "2010-07-09", :offset_date => "2010-07-08" }
     assert_response :forbidden
   end
 
   test "should update holiday with an authenticated user with the holidays permission" do
     setup_authenticated_user_with_permission :tester, :holidays
-    put :update, :id => holidays(:one).to_param, :holiday => { :date => "2010-07-09", :trip_offset => "-1" }
+    put :update, :id => holidays(:one).to_param, :holiday => { :date => "2010-07-09", :offset_date => "2010-07-08" }
     assert_redirected_to holiday_path(assigns(:holiday))
   end
 

@@ -12,13 +12,13 @@ class HolidayTest < ActiveSupport::TestCase
     }
   end
 
-  test "a holiday must have an associated trip offset" do
-    [0, 1, 10000, -1, -10000].each { |x|
-      assert assign_valid_value(holidays(:one), :trip_offset, x), "A holiday should accept a valid trip offset value."
+  test "a holiday must have an associated offset date" do
+    ([0, 1, 10000, -1, -10000].map {|i| Date.today + i.days }).each { |x|
+      assert assign_valid_value(holidays(:one), :offset_date, x), "A holiday should accept a valid offset date value."
     }
 
     [0.5, -0.5, nil, "", "cake", "infinity", "one"].each { |x|
-      assert assign_invalid_value(holidays(:one), :trip_offset, x), "A holiday should not accept an invalid trip offset value."
+      assert assign_invalid_value(holidays(:one), :offset_date, x), "A holiday should not accept an invalid offset date value."
     }
   end
 

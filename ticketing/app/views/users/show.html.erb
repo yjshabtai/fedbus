@@ -28,6 +28,15 @@
   <% end %>
 </ul>
 
+<p>
+	<b>Tickets:</b>
+</p>
+
+<ul>
+	<% for t in @tickets %>
+		<li><%= link_to "Ticket #{t.id.to_s}", t %></li>
+	<% end %>
+</ul>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

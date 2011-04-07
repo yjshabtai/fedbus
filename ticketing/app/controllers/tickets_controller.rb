@@ -191,6 +191,7 @@ class TicketsController < ApplicationController
 	end
 
 	def recent
+		# Default value is in the past day
 		@time = params[:time] ? Time.at(params[:time].to_i) : Time.now - 86400
 		@recent = Ticket.where ["updated_at >= ?", @time]
 

@@ -8,7 +8,7 @@ class Holiday < ActiveRecord::Base
   end
 
 	def trip_offset
-		(self[:ofset_date] - self[:date]).to_i
+		(self[:offset_date] - self[:date]).to_i
 	end
 
   def to_s
