@@ -45,6 +45,7 @@ Ticketing::Application.routes.draw do
 			get 'expire'
 			get 'buy'
 			get 'recent'
+			get 'sell'
 		end
 	end
 

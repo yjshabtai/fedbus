@@ -1,9 +1,10 @@
 class TicketsController < ApplicationController
-	before_filter permission_required(:tickets), :except => [:show, :browse, :buy]
+	before_filter permission_required(:tickets), :except => [:show, :buy, :sell]
 	before_filter permission_required(:tickets), :only => [:show],
      	            :unless => lambda { |c| c.logged_in? && 
 									           c.current_user == Ticket.find(c.params[:id]).user }
 	before_filter :login_required, :only => [:buy]
+	before_filter permission_required(:ticket_selling), :only => [:sell]
 
   # GET /tickets
   # GET /tickets.xml
@@ -162,6 +163,16 @@ class TicketsController < ApplicationController
 	end
 
 	def buy
+		if params[:selling] == "1" 
+			student = User.find_by_student_number params[:student_number]
+
+			if(!student)
+				flash[:error] = "Could not find the student with that student number." 
+				redirect_to sell_tickets_path
+				return
+			end
+		end
+
 		@buses = Bus.where ["departure >= ?", Date.today]
 
 		@earliestdate = 
@@ -199,6 +210,10 @@ class TicketsController < ApplicationController
 			format.html
 			format.xml
 		end
+	end
+
+	def sell
+
 	end
 
 

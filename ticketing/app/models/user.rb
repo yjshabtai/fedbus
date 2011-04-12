@@ -72,4 +72,8 @@ class User < ActiveRecord::Base
 			end
 		end
 	end
+
+	def self.find_by_student_number num
+		User.find_by_student_number_hash Digest::SHA256.hexdigest(num)
+	end
 end

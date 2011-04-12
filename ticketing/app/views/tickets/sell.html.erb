@@ -1,0 +1,8 @@
+<%= form_tag "buy" do %>
+	<p>
+		<b>Enter the student number to sell a ticket to:</b><br />
+		<%= text_field_tag 'student_number', nil, { :maxlength => 8 } %><br />
+		<%= submit_tag 'Continue' %>
+	</p>
+	<%= hidden_field_tag 'selling', '1' %>
+<% end %>
