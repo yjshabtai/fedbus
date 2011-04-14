@@ -51,7 +51,7 @@
 <!-- Here is where the visible page starts -->
 
 <p>
-	Select tickets:
+	Select tickets<%= @student ? " for #{@student.to_s}" : nil %>:
 </p>
 
 <%= form_tag "/tickets/reserve" do %>
@@ -86,11 +86,12 @@
 		</td>
 	</tr>
 </table>	
-<%= hidden_field_tag :direction,  @otherdir ? 1 : 0 %>
+<%= hidden_field_tag 'direction',  @otherdir ? 1 : 0 %>
+<%= hidden_field_tag 'student', @student ? @student.id : nil %>
 <% end %>
 
 <p>
-	<%= link_to "I am travelling in the other direction", root_path(:opposite => (@otherdir ? "0" : "1")) %>
+<%= link_to "I am travelling in the other direction", root_path(:opposite => (@otherdir ? "0" : "1"), :student => (@student ? @student.id : nil)) %>
 </p>
 
 

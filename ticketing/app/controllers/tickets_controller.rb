@@ -113,7 +113,7 @@ class TicketsController < ApplicationController
 	def reserve
 		dir = params[:direction]
 		@dirs = [:from_waterloo, :to_waterloo]
-		@dirs = [:to_waterloo, :from_waterloo] if dir.to_i == 1
+		@dirs.reverse! if dir.to_i == 1
 
 		@errors = nil
 		@tickets_on_date = []
@@ -122,9 +122,18 @@ class TicketsController < ApplicationController
 		@buses = [params[:zero_select].to_i, params[:one_select].to_i]
 
 		if @buses[0] != 1 and @buses[1] != 1
-			redirect_to root_path(:opposite => dir) 
+			flash[:error] = "Please select at least one destination"
+			redirect_to root_path(:opposite => dir, :student => params[:student]) 
 			return
 		else
+			user =
+				if current_user.has_permission?(:ticket_selling) and 
+						params[:student] and params[:student] != ""
+					User.find params[:student]
+				else
+					current_user
+				end
+
 			@buses.each_with_index do |b, i|
 				if b != 1 
 					next
@@ -133,7 +142,8 @@ class TicketsController < ApplicationController
 				id = params["ticket_#{i.to_s}".to_sym][:id]
 
 				if id.empty?
-					@errors = "Please select a bus for your selection '#{@dirs[i].to_s.humanize.downcase}'"
+					flash[:error] = "Please choose a bus for your selection '#{@dirs[i].to_s.humanize.downcase}'"
+					redirect_to root_path(:opposite => dir, :student => params[:student])
 					return
 				end
 
@@ -147,7 +157,7 @@ class TicketsController < ApplicationController
 
 				t = Ticket.new
 				t.bus = bus
-				t.user = current_user
+				t.user = user
 				t.status = :reserved
 				t.direction = @dirs[i]
 				t.save!
@@ -163,39 +173,27 @@ class TicketsController < ApplicationController
 	end
 
 	def buy
-		if params[:selling] == "1" 
-			student = User.find_by_student_number params[:student_number]
+		if current_user.has_permission?(:ticket_selling)
+			@student =
+				if params[:selling] == "1"
+					User.find_by_student_number params[:student_number]
+				elsif params[:student] and params[:student] != ""
+					User.find params[:student]
+				end
 
-			if(!student)
+			if !@student and params[:selling] == "1"
 				flash[:error] = "Could not find the student with that student number." 
 				redirect_to sell_tickets_path
 				return
 			end
 		end
 
-		@buses = Bus.where ["departure >= ?", Date.today]
-
-		@earliestdate = 
-			if @buses.empty? 
-				nil
-			else
-				if @buses.length == 1
-					@buses[0].departure.to_date
-				else
-					(@buses.inject { |d1, d2| d1.departure.to_date <= d2.departure.to_date ? d1 : d2 }).departure.to_date
-				end
-			end
+		@earliestdate = Bus.earliest_date_after Date.today
 
 		@otherdir = params[:opposite] == "1"
 
-		@forward = @buses.select do |bus| 
-			bus.available_tickets (@otherdir ? :to_waterloo : :from_waterloo ) and
-			bus.departure.to_date == @earliestdate
-		end
-		@backward = @buses.select do |bus| 
-			bus.available_tickets (@otherdir ? :from_waterloo : :to_waterloo ) and
-			bus.departure.to_date != @earliestdate
-		end
+		@forward = Bus.on_date_in_direction @earliestdate, (@otherdir ? :to_waterloo : :from_waterloo)
+		@backward = Bus.after_date_in_direction @earliestdate, (@otherdir ? :from_waterloo : :to_waterloo)
 
 		@dayto = @forward[0] ? @forward[0].departure.strftime("%A") : nil
 		@dayfrom = @backward[0] ? @backward[0].departure.strftime("%A") : nil
@@ -215,6 +213,5 @@ class TicketsController < ApplicationController
 	def sell
 
 	end
-
 
 end

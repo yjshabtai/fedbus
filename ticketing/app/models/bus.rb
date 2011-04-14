@@ -93,6 +93,33 @@ class Bus < ActiveRecord::Base
 		end
 	end
 
+	# Returns the first date with a bus on it after the specified date
+	def self.earliest_date_after date
+		buses = Bus.where ["departure >= ?", date]
+
+		if buses.empty? 
+			nil
+		else
+			if buses.length == 1
+				buses[0].departure.to_date
+			else
+				(buses.inject { |d1, d2| d1.departure.to_date <= d2.departure.to_date ? d1 : d2 }).departure.to_date
+			end
+		end
+	end
+
+	def self.on_date_in_direction date, dir
+		buses = Bus.where ["departure == ?", date]
+
+		buses.select { |bus| bus.available_tickets dir }
+	end
+
+	def self.after_date_in_direction date, dir
+		buses = Bus.where ["departure > ?", date]
+
+		buses.select { |bus| bus.available_tickets dir }
+	end
+
   private
 
   def self.cat_date_time date, time
