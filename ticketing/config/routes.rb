@@ -1,4 +1,6 @@
 Ticketing::Application.routes.draw do 
+  resources :invoices
+
   resources :destinations
 
   resources :ticket_logs
