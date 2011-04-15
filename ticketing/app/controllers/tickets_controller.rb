@@ -155,14 +155,8 @@ class TicketsController < ApplicationController
 					return
 				end
 
-				t = Ticket.new
-				t.bus = bus
-				t.user = user
-				t.status = :reserved
-				t.direction = @dirs[i]
-				t.save!
-
-				@tickets << t
+				# If user != current_user, then someone is selling the ticket
+				@tickets << Ticket.make_ticket user, bus, @dirs[i], (user == current_user ? nil : current_user)
 			end
 		end
 
