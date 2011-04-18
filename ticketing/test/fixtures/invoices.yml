@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  total: 9.99
+  status: unpaid
+  payment: none
+  user: one
+
+two:
+  total: 9.99
+  status: paid
+  payment: visa
+  user: two

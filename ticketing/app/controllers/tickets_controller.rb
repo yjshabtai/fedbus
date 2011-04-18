@@ -156,7 +156,7 @@ class TicketsController < ApplicationController
 				end
 
 				# If user != current_user, then someone is selling the ticket
-				@tickets << Ticket.make_ticket user, bus, @dirs[i], (user == current_user ? nil : current_user)
+				@tickets << Ticket.make_ticket(user, bus, @dirs[i], (user == current_user ? nil : current_user))
 			end
 		end
 
