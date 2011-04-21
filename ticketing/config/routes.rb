@@ -57,6 +57,10 @@ Ticketing::Application.routes.draw do
 		end
 	end
 
+	resources :users do
+		get 'tickets'
+	end
+
   # Sample resource route with options:
   #   resources :products do
   #     member do

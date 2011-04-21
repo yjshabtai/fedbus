@@ -125,4 +125,9 @@ class UsersController < ApplicationController
     CASClient::Frameworks::Rails::Filter.logout(self)
   end
 
+	def tickets
+		@user = User.find params[:user_id]
+		@tickets = @user.tickets
+	end
+
 end

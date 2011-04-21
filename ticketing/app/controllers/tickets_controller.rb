@@ -123,7 +123,7 @@ class TicketsController < ApplicationController
 
 		if @buses[0] != 1 and @buses[1] != 1
 			flash[:error] = "Please select at least one destination"
-			redirect_to root_path(:opposite => dir, :student => params[:student]) 
+			#redirect_to root_path(:opposite => dir, :student => params[:student]) 
 			return
 		else
 			user =
@@ -159,6 +159,8 @@ class TicketsController < ApplicationController
 				@tickets << Ticket.make_ticket(user, bus, @dirs[i], (user == current_user ? nil : current_user))
 			end
 		end
+
+		redirect_to user_tickets_path(:user_id => user.id, :selling => (user == current_user ? nil : "1"))
 
 	end
 
