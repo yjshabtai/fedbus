@@ -1,3 +1,10 @@
 <% @tickets.each do |t| %>
 	<%= link_to t.id, t %>
 <% end %>
+
+<p>
+<%= !params[:ticket_list] ? nil : link_to("View reserved tickets", user_tickets_path(:user_id => params[:user_id], :ticket_list => nil)) + " |" %> 
+<%= params[:ticket_list] == "old" ? nil : link_to("View old tickets", user_tickets_path(:user_id => params[:user_id], :ticket_list => "old")) %>
+<%= params[:ticket_list] ? nil : " |" %>
+<%= params[:ticket_list] == "paid" ? nil : link_to("View paid tickets", user_tickets_path(:user_id => params[:user_id], :ticket_list => "paid")) %>
+</p>
