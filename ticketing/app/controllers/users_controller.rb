@@ -129,6 +129,10 @@ class UsersController < ApplicationController
 		@user = User.find params[:user_id]
 		@tickets = @user.tickets
 		
+		if @user != current_user
+			params[:selling] = "1"
+		end
+
 		if params[:ticket_list] == "old"
 			@tickets.select! { |t| t.status != :reserved }
 		elsif params[:ticket_list] == "paid"

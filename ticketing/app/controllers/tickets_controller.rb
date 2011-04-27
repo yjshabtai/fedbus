@@ -1,6 +1,6 @@
 class TicketsController < ApplicationController
 	before_filter permission_required(:tickets), :except => [:show, :buy, :sell]
-	before_filter permission_required(:tickets), :only => [:show],
+	before_filter permission_required(:ticket_selling), :only => [:show],
      	            :unless => lambda { |c| c.logged_in? && 
 									           c.current_user == Ticket.find(c.params[:id]).user }
 	before_filter :login_required, :only => [:buy]
