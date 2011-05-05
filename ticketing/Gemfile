@@ -37,4 +37,3 @@ gem "mail", '2.2.15'
 gem "highline"
 gem "symbolize"
 gem "dynamic_form"
-gem "ruby-debug19"
