@@ -1,6 +1,6 @@
 class TicketsController < ApplicationController
 	before_filter permission_required(:tickets), :except => [:show, :buy, :sell]
-	before_filter permission_required(:tickets), :only => [:show],
+	before_filter permission_required(:ticket_selling), :only => [:show],
      	            :unless => lambda { |c| c.logged_in? && 
 									           c.current_user == Ticket.find(c.params[:id]).user }
 	before_filter :login_required, :only => [:buy]
@@ -123,7 +123,7 @@ class TicketsController < ApplicationController
 
 		if @buses[0] != 1 and @buses[1] != 1
 			flash[:error] = "Please select at least one destination"
-			redirect_to root_path(:opposite => dir, :student => params[:student]) 
+			#redirect_to root_path(:opposite => dir, :student => params[:student]) 
 			return
 		else
 			user =
@@ -155,16 +155,12 @@ class TicketsController < ApplicationController
 					return
 				end
 
-				t = Ticket.new
-				t.bus = bus
-				t.user = user
-				t.status = :reserved
-				t.direction = @dirs[i]
-				t.save!
-
-				@tickets << t
+				# If user != current_user, then someone is selling the ticket
+				@tickets << Ticket.make_ticket(user, bus, @dirs[i], (user == current_user ? nil : current_user))
 			end
 		end
+
+		redirect_to user_tickets_path(:user_id => user.id, :selling => (user == current_user ? nil : "1"))
 
 	end
 

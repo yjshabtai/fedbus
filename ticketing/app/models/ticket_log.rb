@@ -17,6 +17,8 @@ class TicketLog < ActiveRecord::Base
 		l.user = user
 
 		l.save
+
+		return l
 	end
 
 end

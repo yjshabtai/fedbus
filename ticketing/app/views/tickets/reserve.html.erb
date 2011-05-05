@@ -6,10 +6,6 @@
 		<br />
 		<%= "In the direction: #{t.direction.to_s.humanize}" %> 
 		<br />
-		<% t.errors.each do |e| %>
-			<br />
-			<%= "Error: #{e.to_s}" %>
-		<% end %>
 	<% end %>
 <% else %>
 	<%= @errors %>

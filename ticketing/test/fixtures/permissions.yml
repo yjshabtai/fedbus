@@ -32,3 +32,6 @@ tickets:
 
 destinations:
   name: Destinations
+
+invoices:
+  name: Invoices

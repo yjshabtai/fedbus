@@ -108,14 +108,16 @@ class Bus < ActiveRecord::Base
 		end
 	end
 
+	# Date only, not datetime
 	def self.on_date_in_direction date, dir
-		buses = Bus.where ["departure == ?", date]
+		buses = Bus.where ["departure >= ? and departure <= ?", date, date + 1.days]
 
 		buses.select { |bus| bus.available_tickets dir }
 	end
 
+	# Date only, not datetime
 	def self.after_date_in_direction date, dir
-		buses = Bus.where ["departure > ?", date]
+		buses = Bus.where ["departure > ?", date + 1.days]
 
 		buses.select { |bus| bus.available_tickets dir }
 	end

@@ -53,13 +53,24 @@ class Ticket < ActiveRecord::Base
 			t.status = :expired
 			t.save!
 
-			l = TicketLog.new
-			l.ticket = t
-			l.log = "Expired by default"
-			l.save!
+			TicketLog.make_log "Expired by default", t
 			i += 1
 		end
 		i
+	end
+
+	def self.make_ticket owner, bus, direction, seller = nil
+		t = Ticket.new
+		t.bus = bus
+		t.user = owner
+		t.status = :reserved
+		t.direction = direction
+
+		t.save
+
+		TicketLog.make_log (seller ? "Ticket sold by user" : "Ticket sold by system"), t, seller
+
+		return t
 	end
 
 end

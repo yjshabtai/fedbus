@@ -1,4 +1,6 @@
 Ticketing::Application.routes.draw do 
+  resources :invoices
+
   resources :destinations
 
   resources :ticket_logs
@@ -53,6 +55,10 @@ Ticketing::Application.routes.draw do
 		collection do
 			get 'generate'
 		end
+	end
+
+	resources :users do
+		get 'tickets'
 	end
 
   # Sample resource route with options:

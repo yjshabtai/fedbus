@@ -10,6 +10,7 @@ Permission.find_or_create_by_name("View admin panel")
 Permission.find_or_create_by_name("Tickets")
 Permission.find_or_create_by_name("Destinations")
 Permission.find_or_create_by_name("Ticket selling")
+Permission.find_or_create_by_name("Invoices")
 
 # Default roles
 admin = Role.find_or_create_by_name("Administrator")
