@@ -1,0 +1,46 @@
+
+<% cu = current_user %>
+<% if cu != nil %>
+<ul class="navbar">
+
+	<% if cu.has_permission?(:blackouts) %>
+		<li><%= link_to "Blackouts", blackouts_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:buses) %>
+		<li><%= link_to "Buses", buses_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:destinations) %>
+		<li><%= link_to "Destinations", destinations_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:holidays) %>
+		<li><%= link_to "Invoices", invoices_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:permissions) %>
+		<li><%= link_to "Permissions", permissions_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:reading_weeks) %>
+		<li><%= link_to "Reading Weeks", reading_weeks_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:roles) %>
+		<li><%= link_to "Roles", roles_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:tickets) %>
+		<li><%= link_to "Tickets", tickets_path %></li>
+		<li><%= link_to "Ticket Logs", ticket_logs_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:trips) %>
+		<li><%= link_to "Trips", trips_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:users) %>
+		<li><%= link_to "Users", users_path %></li>
+	<% end %>
+	<% if cu.has_permission?(:tickets_sell) %>
+		<li><%= link_to "Sell Tickets", tickets_sell_path %></li>
+	<% end %>
+
+	<li style="float:right;"><%= link_to "My Profile", user_path(cu) %></li>
+	<li style="float:right;"><%= link_to "My Cart", cart_path(cu) %></li>
+	<li style="float:right;"><%= link_to "Buy Tickets", tickets_buy_path %></li>
+
+</ul>
+<% end %>

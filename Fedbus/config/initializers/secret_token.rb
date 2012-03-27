@@ -1,0 +1,7 @@
+# Be sure to restart your server when you modify this file.
+
+# Your secret key for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+# Make sure the secret is at least 30 characters and all random,
+# no regular words or you'll be exposed to dictionary attacks.
+FedbusRails32::Application.config.secret_token = '9066a90bf79e5094870f4947bbc0dba3efd2e119cc61c7afe0e00aa5ab1640fa61f2eeab33e543b4e83d670ffa786304df5c43281a51a4db3e3386f71f021e45'

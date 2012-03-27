@@ -1,0 +1,32 @@
+<%= javascript_include_tag "paying" %>
+
+<div class="cartbox">
+	<h3>Your shopping cart:</h3>
+	<table>
+		<% @tickets.each do |tick| %>
+			<tr>
+				<td><%= tick.description %></td>
+				<td><span class="ticket_price"><%= number_to_currency(tick.ticket_price) %></span></td>
+			</tr>
+		<% end %>
+		<tr><td><br/></td><td><br/></td></tr>
+		<tr>
+			<td>Total</td>
+			<td><span class="ticket_price"><%= number_to_currency(@curr_user.cart_total) %></span></td>
+		</tr>
+
+	</table>
+
+	<br/>
+	<div class="pay_area">
+		payment form goes here
+	</div>
+
+	<% if !@tickets.empty? %>
+		<button class="cart_pay">Pay</button>
+	<% end %>
+</div>
+
+<div class="ajax">
+	<%= image_tag "ajax-loader.gif", :class => "ajax_loader" %>
+</div>

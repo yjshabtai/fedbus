@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  comment: MyString
+  start: 2012-02-01
+  expiry: 2012-02-01
+
+two:
+  comment: MyString
+  start: 2012-02-01
+  expiry: 2012-02-01

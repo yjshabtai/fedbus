@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  total: 
+  status: MyString
+  payment: MyString
+  user_id: 1
+  transaction_id: MyString
+  trace_number: MyString
+  approval_code: MyString
+  transaction_date: MyString
+  hostensoln_id: MyString
+  response_code: 1
+  card_number: MyString
+
+two:
+  total: 
+  status: MyString
+  payment: MyString
+  user_id: 1
+  transaction_id: MyString
+  trace_number: MyString
+  approval_code: MyString
+  transaction_date: MyString
+  hostensoln_id: MyString
+  response_code: 1
+  card_number: MyString

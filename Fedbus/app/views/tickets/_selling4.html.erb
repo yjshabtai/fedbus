@@ -1,0 +1,13 @@
+<br/><%= @bus.name %><br/>
+Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/>
+
+<% if @return_bus %>
+	<%= check_box("return", "trip", :class => "return_chk") %> Return trip on <%= @return_bus.date.strftime("%a, %B %e") %>
+	<br/>
+	Departure Time: <%= @r_depart.strftime("%k:%M") %> Arrival Time: <%= @r_arrive.strftime("%k:%M") %><br/><br/>
+<% end %>
+
+
+Cost: <span class="ticket_price"><%= number_to_currency(@bus.ticket_price) %></span><br/>
+
+<button class="sell_ticket">Sell</button>

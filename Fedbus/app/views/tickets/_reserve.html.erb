@@ -1,0 +1,9 @@
+<% @tickets.each do |tick| %>
+	You have reserved a ticket for <%= tick.description %><br/>
+<% end %>
+<% @errors.each do |err| %>
+	<%= err %></br>
+<% end %>
+
+<a href=""><button class="buy_more">Back to Ticket Selector</button></a>
+<a href="/cart"><button class="to_cart">To Cart</button></a>

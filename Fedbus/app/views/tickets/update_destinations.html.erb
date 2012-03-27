@@ -1,0 +1,8 @@
+Destination: 
+<% if @buses.empty? %>
+	There are no buses for this location on this date.
+<% elsif @away_trip %>
+	<%= collection_select :bus, :id, @buses, :id, :destination_to_waterloo_name, options = { :prompt => "Choose a destination" } %>
+<% else %>
+	<%= collection_select :bus, :id, @buses, :id, :destination_name, options = { :prompt => "Choose a destination" } %>
+<% end %>

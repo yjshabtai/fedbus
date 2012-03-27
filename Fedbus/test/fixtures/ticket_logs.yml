@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  log: MyString
+  user_id: 1
+  ticket_id: 1
+
+two:
+  log: MyString
+  user_id: 1
+  ticket_id: 1
