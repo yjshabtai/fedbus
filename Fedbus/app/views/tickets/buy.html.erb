@@ -1,0 +1,13 @@
+<%= javascript_include_tag "buying" %>
+
+<div class="buybox">
+	Departure Date<br/>
+	<%= select("date", "day", @dates.collect {|d| [ d.strftime("%a, %B %e"), d]}, {:prompt => 'Choose a date'}, :class => 'date_select') %></br>
+
+	<div class="departure_field">
+	</div>
+</div>
+
+<div class="ajax">
+	<%= image_tag "ajax-loader.gif", :class => "ajax_loader" %>
+</div>

@@ -1,0 +1,21 @@
+<strong>Ticket ID:</strong> <%= @ticket.id %><br />
+<strong>Status:</strong> <%= @ticket.status.humanize %><br />
+<strong>Bus:</strong> <%= link_to @ticket.bus.name, bus_path(@ticket.bus) %><br />
+<strong>Direction:</strong> <%= @ticket.direction.humanize %><br />
+<strong>User:</strong> <%= link_to @ticket.user.userid, user_path(@ticket.user) %><br />
+<% if @ticket.invoice %>
+<strong>Invoice:</strong> <%= link_to @ticket.invoice.id, invoice_path(@ticket.invoice) %><br />
+<% end %>
+<strong>Ticket Price:</strong> $<%= @ticket.ticket_price %><br />
+<strong>Created On:</strong> <%= @ticket.created_at.strftime("%B %d, %Y %I:%M%p") %><br />
+
+<br />
+<strong>Ticket Logs:</strong><br />
+<ul>
+	<% TicketLog.where(:ticket_id => @ticket.id).each do |t| %>
+		<li><%= link_to t.log, ticket_log_path(t) %></li>
+	<% end %>
+</ul>
+
+<%= link_to 'Edit', edit_ticket_path(@ticket) %> |
+<%= link_to 'Back', tickets_path %>

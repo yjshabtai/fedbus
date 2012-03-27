@@ -1,0 +1,47 @@
+/* 
+	The main scss file that is used in every non-admin layout
+*/
+
+$mainfont: #cc9e00;
+$mainbg: #161616;
+$contentbg: #161616;
+$buttoncolor: #cc9e00;
+
+html, body {
+	margin: 0;
+	padding: 0;
+
+	background-color: $mainbg;
+	color: $mainfont;
+	font-family: $verdana;
+}
+a {
+	text-decoration: none;
+	&:hover {
+		text-decoration: none;
+	}
+	&:visited {
+		text-decoration: none;
+	}
+}
+
+.button_navs {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	button {
+		@include button($buttoncolor);
+	}
+}
+
+.ajax {
+	width: 900px;
+	margin: auto;
+	font-size: 30px;
+	text-align: center;
+}
+
+.ticket_price {
+	color: green;
+}

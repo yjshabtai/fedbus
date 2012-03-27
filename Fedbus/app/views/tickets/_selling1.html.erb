@@ -1,0 +1,5 @@
+Departure Date<br/>
+<%= select("date", "day", @dates.collect {|d| [ d.strftime("%a, %B %e"), d]}, {:prompt => 'Choose a date'}, :class => 'date_select') %></br>
+
+<div class="departure_field">
+</div>

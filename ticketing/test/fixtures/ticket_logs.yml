@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  log: MyString
-  ticket: one
-
-two:
-  log: MyString
-  ticket: two

@@ -1,0 +1,60 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Total:</b>
+  <%= @invoice.total %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @invoice.status %>
+</p>
+
+<p>
+  <b>Payment:</b>
+  <%= @invoice.payment %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @invoice.user_id %>
+</p>
+
+<p>
+  <b>Transaction:</b>
+  <%= @invoice.transaction_id %>
+</p>
+
+<p>
+  <b>Trace number:</b>
+  <%= @invoice.trace_number %>
+</p>
+
+<p>
+  <b>Approval code:</b>
+  <%= @invoice.approval_code %>
+</p>
+
+<p>
+  <b>Transaction date:</b>
+  <%= @invoice.transaction_date %>
+</p>
+
+<p>
+  <b>Hostensoln:</b>
+  <%= @invoice.hostensoln_id %>
+</p>
+
+<p>
+  <b>Response code:</b>
+  <%= @invoice.response_code %>
+</p>
+
+<p>
+  <b>Card number:</b>
+  <%= @invoice.card_number %>
+</p>
+
+
+<%= link_to 'Edit', edit_invoice_path(@invoice) %> |
+<%= link_to 'Back', invoices_path %>

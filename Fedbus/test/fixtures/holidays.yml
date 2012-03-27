@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  date: 2012-02-01
+  name: MyString
+  comment: MyText
+  offset_date: 2012-02-01
+
+two:
+  date: 2012-02-01
+  name: MyString
+  comment: MyText
+  offset_date: 2012-02-01

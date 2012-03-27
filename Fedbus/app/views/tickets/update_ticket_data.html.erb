@@ -1,0 +1,23 @@
+<p>
+	<strong>Departure Time:</strong> <%= @bus.start_time_for_bus(!@away_trip) %><br />
+	<strong>Arrival Time:</strong> <%= @bus.end_time_for_bus(!@away_trip) %><br />
+	
+	<% b = repeat_buses(@bus) %>
+	<% if !b.empty? %>
+		<br />
+		
+		<%= check_box("trip","return") %> Purchase return trip for <%= return_trip_for_bus(b).date %><br />
+		<strong>Departure Time:</strong> <%= return_trip_for_bus(b).start_time_for_bus(@away_trip) %><br />
+		<strong>Arrival Time:</strong> <%= return_trip_for_bus(b).end_time_for_bus(@away_trip) %><br /.
+		<br />
+		
+		<div id="ticket_cost">Cost: $<%= @bus.ticket_price %></div>
+		<div id="ticket_cost2" hidden=true>Cost: $<%= @bus.ticket_price.to_i + return_trip_for_bus(b).ticket_price.to_i - 2.00 %></div>
+		
+	<% else %>
+		<div id="ticket_cost">Cost: $<%= @bus.ticket_price %></div>
+		<div id="ticket_cost2" hidden=true>Cost: $<%= @bus.ticket_price.to_i + return_trip_for_bus(b).ticket_price.to_i - 2.00 %></div>
+	<% end %>
+	
+	<%= submit_tag 'Continue' %>
+</p>

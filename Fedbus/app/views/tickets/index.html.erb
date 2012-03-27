@@ -1,0 +1,6 @@
+<%= create_table(@tickets, @columns, "Listing Tickets") %>
+
+<br />
+
+<%= link_to 'New Ticket', new_ticket_path %>
+Note: Tickets are created through <%= link_to "tickets/buy", "/tickets/buy" %> and <%= link_to "tickets/sell", "/tickets/sell" %>. Only create new tickets manually for really specific situations.

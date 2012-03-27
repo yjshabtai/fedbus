@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  destination_id: 1
+  weekday: 1
+  depart_time: 2012-02-01 11:06:38
+  arrive_time: 2012-02-01 11:06:38
+  return_time: 2012-02-01 11:06:38
+  ticket_price: 
+  sales_lead: 1
+  comment: MyText
+
+two:
+  name: MyString
+  destination_id: 1
+  weekday: 1
+  depart_time: 2012-02-01 11:06:38
+  arrive_time: 2012-02-01 11:06:38
+  return_time: 2012-02-01 11:06:38
+  ticket_price: 
+  sales_lead: 1
+  comment: MyText
