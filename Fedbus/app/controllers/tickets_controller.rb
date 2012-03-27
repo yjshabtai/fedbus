@@ -2,65 +2,12 @@ class TicketsController < ApplicationController
 	
 	# TODO: Document the control flow for buying and selling tickets here
 	
-	before_filter permission_required(:tickets), :except => [:show, :buy, :sell, :destroy]
 	before_filter permission_required(:tickets_sell), :only => [:sell]
-	before_filter permission_required(:tickets_sell), :only => [:show], :unless => :is_own_ticket?
 	before_filter :login_required, :only => [:buy]
 	
 	def is_own_ticket?
 		logged_in? && Ticket.find(params[:id]).user == current_user
 	end
-
-  # POST /tickets
-  # POST /tickets.json
-  def create
-    @ticket = Ticket.new(params[:ticket])
-
-    respond_to do |format|
-		if @ticket.valid?
-			if TicketLog.make_log(params[:log], @ticket, current_user)
-				@ticket.save
-				flash[:notice] = 'Ticket was successfully created.'
-				format.html { redirect_to(@ticket) }
-				format.xml  { render :xml => @ticket, :status => :created, :location => @ticket }
-			else
-				@ticket.errors.add :log, "entry cannot be blank"
-				format.html { render :action => "new" }
-				format.xml  { render :xml => @ticket.errors, :status => :unprocessable_entity }
-			end
-		else
-			@ticket.save
-			format.html { render :action => "new" }
-			format.xml  { render :xml => @ticket.errors, :status => :unprocessable_entity }
-		end
-    end
-  end
-
-  # PUT /tickets/1
-  # PUT /tickets/1.json
-  def update
-    @ticket = Ticket.find(params[:id])
-		@ticket.attributes = params[:ticket]
-
-    respond_to do |format|
-      if @ticket.valid?
-		if TicketLog.make_log(params[:log], @ticket, current_user)
-			@ticket.save
-			flash[:notice] = 'Ticket was successfully updated.'
-			format.html { redirect_to(@ticket) }
-			format.xml  { head :ok }
-		else
-			@ticket.errors.add :log, "entry cannot be blank"
-			format.html { render :action => "edit" }
-			format.xml { render :xml => @ticket.errors, :status => :unprocessable_entity }
-		end
-      else
-		@ticket.save
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @ticket.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
   
 	# GET /tickets/buy
 	# GET /tickets/buy.json
@@ -105,8 +52,16 @@ class TicketsController < ApplicationController
 			render :partial => "tickets/reserve"
 		end
 
-		
+	end
 
+	# GET /tickets/pay
+	def pay
+
+
+	end
+
+	# GET /tickets/pay_area
+	def pay_area
 	end
 		#if params[:departure] == '0'
 		#	dir = :from_waterloo

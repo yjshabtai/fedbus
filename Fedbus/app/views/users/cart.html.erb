@@ -1,3 +1,5 @@
+<%= javascript_include_tag "paying" %>
+
 <div class="cartbox">
 	<h3>Your shopping cart:</h3>
 	<table>
@@ -15,7 +17,16 @@
 
 	</table>
 
+	<br/>
+	<div class="pay_area">
+		payment form goes here
+	</div>
+
 	<% if !@tickets.empty? %>
 		<button class="cart_pay">Pay</button>
 	<% end %>
+</div>
+
+<div class="ajax">
+	<%= image_tag "ajax-loader.gif", :class => "ajax_loader" %>
 </div>

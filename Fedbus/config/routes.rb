@@ -18,9 +18,9 @@ FedbusRails32::Application.routes.draw do
   get 'tickets/update_price'
   get 'tickets/buy'
   get 'tickets/sell'
-  get 'tickets/update_destinations'
-  get 'tickets/update_ticket_data'
   post 'tickets/reserve'
+  get 'tickets/pay_area'
+  get 'tickets/pay'
   resources :tickets
 
   resources :users
