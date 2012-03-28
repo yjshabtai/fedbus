@@ -1,11 +1,12 @@
 <br/><%= @bus.name %><br/>
 Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/><br/>
 
-<% if @return_bus %>
-	<%= check_box("return", "trip", :class => "return_chk") %> Return trip on <%= @return_bus.date.strftime("%a, %B %e") %>
-	<br/>
-	<%= @return_bus.name %><br/>
-	Departure Time: <%= @r_depart.strftime("%k:%M") %> Arrival Time: <%= @r_arrive.strftime("%k:%M") %><br/><br/>
+<% if !@return_buses.empty? %>
+	
+	Return Trip:</br>
+	<%= select("return", "bus_id", @return_buses.collect {|rb| [rb.trip.destination.name, rb.id]}, {:include_blank => 'None'}, :class => 'test') %></br>
+
+	<br/><br/>
 <% end %>
 
 

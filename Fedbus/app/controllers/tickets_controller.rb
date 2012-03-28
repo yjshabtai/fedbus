@@ -164,11 +164,7 @@ class TicketsController < ApplicationController
 		@arrive = (params[:dep_id] == '0') ? @bus.arrive_time : @bus.return_time
 		@depart = params[:dep_id] == '0' ? @bus.depart_time : @bus.arrive_time
 		
-		@return_bus = @bus.find_return
-		if @return_bus
-			@r_arrive = (params[:dep_id] == '0') ? @return_bus.return_time : @return_bus.arrive_time
-			@r_depart = params[:dep_id] == '0' ? @return_bus.arrive_time : @return_bus.depart_time
-		end
+		@return_buses = @bus.find_returns
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying4") : (render :partial => "tickets/selling4")
 	end

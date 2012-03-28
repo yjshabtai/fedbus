@@ -42,14 +42,14 @@ class Bus < ActiveRecord::Base
 		self.save
 	end
 
-	# Returns a return bus if one exists
-	def find_return
+	# Returns the possible return buses
+	def find_returns
 		# If it is a friday and the next sunday is a reading week then the return bus will be the following sunday
 		# If the next sunday is not a reading week then it will be on that sunday
 		if date.wday == 5 
-			ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:destination_id => destination.id).find_by_date(date + 9.days) : Bus.where(:destination_id => destination.id).find_by_date(date + 2.days)
+			ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days)) : Bus.where(:date => (date + 2.days))
 		else
-			nil
+			[]
 		end
 	end
 	
