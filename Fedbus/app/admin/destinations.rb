@@ -60,6 +60,8 @@ ActiveAdmin.register Destination do
     attributes_table do
       row :name
       row :description
+      row :address
+      row :location_description
       row :created_at
       row :updated_at
     end
@@ -81,6 +83,8 @@ ActiveAdmin.register Destination do
   	f.inputs "Details" do
   		f.input :name
   		f.input :description
+      f.input :address
+      f.input :location_description
   	end
   	f.buttons
   end
