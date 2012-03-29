@@ -3,8 +3,8 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 
 <% if !@return_buses.empty? %>
 	
-	Return Trip:</br>
-	<%= select("return", "bus_id", @return_buses.collect {|rb| [rb.trip.destination.name, rb.id]}, {:include_blank => 'None'}, :class => 'test') %></br>
+	Return From:</br>
+	<%= select("return", "bus_id", @return_buses, {:include_blank => 'None'}, :class => 'test') %></br>
 
 	<br/><br/>
 <% end %>

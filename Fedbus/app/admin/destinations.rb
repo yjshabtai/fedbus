@@ -68,7 +68,7 @@ ActiveAdmin.register Destination do
     active_admin_comments
   end
 
-   # Creates a sidebar that displays the destination's trips
+  # Creates a sidebar that displays the destination's trips
   sidebar :trips, :only => :show do
     table_for destination.trips do
         column :name do |trip|

@@ -33,7 +33,11 @@ class Bus < ActiveRecord::Base
 	def maximize_seats
 		# the number of seats per bus and how many buses are filled
 		seats_per_bus = 48
-		filled_buses = tickets.count / seats_per_bus
+
+		# finds the direction with the most amount of tickets
+		max_tickets = [available_tickets(:from_waterloo), available_tickets(:to_waterloo)].max
+
+		filled_buses = max_tickets / seats_per_bus
 
 		# The maximum amount of seats is the current number of buses needed + whatever is needed to fill up the last bus if it is unfilled
 		self.maximum_seats = filled_buses * seats_per_bus + 
@@ -50,36 +54,6 @@ class Bus < ActiveRecord::Base
 			ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days)) : Bus.where(:date => (date + 2.days))
 		else
 			[]
-		end
-	end
-	
-	# TODO: Document this fucntion: earliest date of what?
-	def self.earliest_date_after date
-		buses = Bus.where("date >= ? and status = 'open'", date)
-
-		if buses.empty? 
-			date
-		else
-			if buses.length == 1
-				buses[0].date
-			else
-				(buses.inject { |d1, d2| d1.date <= d2.date ? d1 : d2 }).date
-			end
-		end
-	end
-	
-	# TODO: Document this fucntion: earliest date of what?
-	def self.earliest_date_before date
-		buses = Bus.where("date < ? and status = 'open'", date)
-
-		if buses.empty? 
-			date
-		else
-			if buses.length == 1
-				buses[0].date
-			else
-				(buses.inject { |d1, d2| d1.date >= d2.date ? d1 : d2 }).date
-			end
 		end
 	end
 	
