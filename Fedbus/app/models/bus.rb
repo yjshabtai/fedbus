@@ -35,7 +35,7 @@ class Bus < ActiveRecord::Base
 		seats_per_bus = 48
 
 		# finds the direction with the most amount of tickets
-		max_tickets = [available_tickets(:from_waterloo), available_tickets(:to_waterloo)].max
+		max_tickets = [sold_tickets(:from_waterloo), sold_tickets(:to_waterloo)].max
 
 		filled_buses = max_tickets / seats_per_bus
 
@@ -57,8 +57,12 @@ class Bus < ActiveRecord::Base
 		end
 	end
 	
+	def sold_tickets(direction)
+		 (tickets.select {|t| t.direction == direction && t.status_valid? }).count
+	end
+
 	def available_tickets(direction)
-		return self.maximum_seats - (self.tickets.select { |t| t.direction == direction and t.status_valid? }).count
+		maximum_seats ? (maximum_seats - (tickets.select { |t| t.direction == direction and t.status_valid? }).count) : nil
 	end
 	
 	def destination_name

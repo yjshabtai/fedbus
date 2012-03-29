@@ -8,12 +8,6 @@ class TicketsController < ApplicationController
 	def is_own_ticket?
 		logged_in? && Ticket.find(params[:id]).user == current_user
 	end
-  
-	# GET /tickets/buy
-	# GET /tickets/buy.json
-	def buy
-		@dates = Bus.where(:status => :open).collect {|b| b.date }.uniq
-	end
 	
 	# POST /tickets/reserve
 	def reserve
@@ -134,6 +128,12 @@ class TicketsController < ApplicationController
   	def sell
   		
   	end
+  
+	# GET /tickets/buy
+	# GET /tickets/buy.json
+	def buy
+		@dates = Bus.where(:status => :open).select{|b| !b.maximum_seats || b.available_tickets(:from_waterloo) > 0 || b.available_tickets(:to_waterloo) > 0 }.collect {|b| b.date }.uniq
+	end
 
 	def find_user
 
@@ -148,9 +148,9 @@ class TicketsController < ApplicationController
 	def find_dests
 
 		if params[:dep_id] == '0'
-			@destinations = Bus.where(:date => params[:date], :status => :open).collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]}
+			@destinations = Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets(:from_waterloo) > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]}
 		else
-			bus = Bus.where(:date => params[:date], :status => :open, :destination_id => params[:dep_id]).first
+			bus = Bus.find(params[:dep_id])
 			@destinations = [['UW Campus, ' + bus.return_time.strftime("%k:%M"), bus.id]]
 		end
 
@@ -171,7 +171,9 @@ class TicketsController < ApplicationController
 
 	# Gets the locations for departure on a given date
 	def find_deps
-		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.destination.id]})
+		# This will list all of the buses with departures on this date.
+		# There will be at least one because the date selector uses the same formula.
+		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets(:to_waterloo) > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]})
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying2") : (render :partial => "tickets/selling2")
 	end
