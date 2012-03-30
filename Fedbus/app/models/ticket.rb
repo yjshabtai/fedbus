@@ -32,7 +32,7 @@ class Ticket < ActiveRecord::Base
 	# valid = true returns tickets whose status is either paid or reserved
 	# valid = false returns tickets whose status is either void or expired
 	def status_valid? valid = true
-		if valid
+		if valid   
 			Ticket::STATUSES[0..1].include? status.to_sym
 		else
 			Ticket::STATUSES[2..4].include? status.to_sym
@@ -40,6 +40,6 @@ class Ticket < ActiveRecord::Base
 	end
 
 	def description
-		(direction == :from_waterloo ? ("UW Campus to " + bus.destination.name) : (bus.destination.name + " to UW Campus")) + " on " + bus.date.strftime("%B %e, %Y")
+		(direction == 'from_waterloo' ? ("UW Campus to " + bus.destination.name) : (bus.destination.name + " to UW Campus")) + " on " + bus.date.strftime("%B %e, %Y")
 	end
 end

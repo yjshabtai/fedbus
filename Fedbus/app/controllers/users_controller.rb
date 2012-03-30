@@ -1,19 +1,6 @@
 class UsersController < ApplicationController
 	before_filter permission_required(:users), :except => [:login, :logout, :new, :create], :unless => lambda { |c| c.logged_in? && c.current_user.to_param == c.params[:id] }
 
-  # GET /users
-  # GET /users.json
-  def index
-    @users = params[:sort] ? User.order(params[:sort]) : User.order(" id DESC")
-	
-    @columns = ["id","userid","first_name","last_name","email","created_at"]
-	
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @users }
-    end
-  end
-
   # GET /users/1
   # GET /users/1.json
   def show
