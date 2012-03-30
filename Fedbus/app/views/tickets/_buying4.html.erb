@@ -1,5 +1,10 @@
 <br/><%= @bus.name %><br/>
-Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/><br/>
+Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/>
+<% if @bus.maximum_seats %>
+	<%= @ticks_avail %> tickets available.
+	<br/>
+<% end %>
+<br/>
 
 <% if !@return_buses.empty? %>
 	
