@@ -12,7 +12,7 @@ class TicketsController < ApplicationController
 	# POST /tickets/reserve
 	def reserve
 		# Get post data
-		dir = params[:dep_id] == '0' ? :from_waterloo : :to_waterloo
+		dir = params[:dep_id] == '0' ? 'from_waterloo' : 'to_waterloo'
 		bus = Bus.find(params[:bus_id])
 		return_bus = params[:ret] == 'true' ? bus.find_return : false
 		buying = params[:buying] == 'true' ? true : false
@@ -35,7 +35,7 @@ class TicketsController < ApplicationController
 			if @errors.empty?
 				@tickets << Ticket.make_ticket(curr_user, bus, dir)
 				if return_bus
-					@tickets << Ticket.make_ticket(curr_user, return_bus, (params[:dep_id] == '0' ? :to_waterloo : :from_waterloo))
+					@tickets << Ticket.make_ticket(curr_user, return_bus, (params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo'))
 					@tickets.each do |tick|
 						tick.ticket_price = tick.bus.ticket_price - 1.0
 						tick.save
@@ -58,18 +58,18 @@ class TicketsController < ApplicationController
 	def pay_area
 	end
 		#if params[:departure] == '0'
-		#	dir = :from_waterloo
+		#	dir = 'from_waterloo'
 		#else
-		#	dir = :to_waterloo
+		#	dir = 'to_waterloo'
 		#end
 		#@errors = nil
 		#@tickets_on_date = []
 		#@tickets = []
 		#
 		#if params[:departure] == '0'
-		#	dir2 = :to_waterloo
+		#	dir2 = 'to_waterloo'
 		#else
-		#	dir2 = :from_waterloo
+		#	dir2 = 'from_waterloo'
 		#end
 		#
 		#bus = Bus.find(params[:bus][:id])
@@ -132,7 +132,7 @@ class TicketsController < ApplicationController
 	# GET /tickets/buy
 	# GET /tickets/buy.json
 	def buy
-		@dates = Bus.where(:status => :open).select{|b| !b.maximum_seats || b.available_tickets(:from_waterloo) > 0 || b.available_tickets(:to_waterloo) > 0 }.collect {|b| b.date }.uniq
+		@dates = Bus.where(:status => :open).select{|b| !b.maximum_seats || b.available_tickets('from_waterloo') > 0 || b.available_tickets('to_waterloo') > 0 }.collect {|b| b.date }.uniq
 	end
 
 	def find_user
@@ -148,7 +148,7 @@ class TicketsController < ApplicationController
 	def find_dests
 
 		if params[:dep_id] == '0'
-			@destinations = Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets(:from_waterloo) > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]}
+			@destinations = Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets('from_waterloo') > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]}
 		else
 			bus = Bus.find(params[:dep_id])
 			@destinations = [['UW Campus, ' + bus.return_time.strftime("%k:%M"), bus.id]]
@@ -163,7 +163,7 @@ class TicketsController < ApplicationController
 		@bus = Bus.find(params[:bus_id])
 		@arrive = (params[:dep_id] == '0') ? @bus.arrive_time : @bus.return_time
 		@depart = params[:dep_id] == '0' ? @bus.depart_time : @bus.arrive_time
-		@ticks_avail = params[:dep_id] == '0' ? @bus.available_tickets(:from_waterloo) : @bus.available_tickets(:to_waterloo)
+		@ticks_avail = params[:dep_id] == '0' ? @bus.available_tickets('from_waterloo') : @bus.available_tickets('to_waterloo')
 
 		@return_buses = params[:dep_id] == '0' ? (@bus.find_returns.collect {|rb| [rb.destination.name + ', ' + rb.depart_time.strftime("%k:%M"), rb.id]}) : [['UW Campus', 0]]
 
@@ -174,7 +174,7 @@ class TicketsController < ApplicationController
 	def find_deps
 		# This will list all of the buses with departures on this date.
 		# There will be at least one because the date selector uses the same formula.
-		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets(:to_waterloo) > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]})
+		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets('to_waterloo') > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]})
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying2") : (render :partial => "tickets/selling2")
 	end

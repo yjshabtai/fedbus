@@ -62,7 +62,7 @@ class Bus < ActiveRecord::Base
 	end
 
 	def available_tickets(direction)
-		maximum_seats ? (maximum_seats - (tickets.select { |t| t.direction == direction and t.status_valid? }).count) : nil
+		maximum_seats ? (maximum_seats - (tickets.select {|t| t.direction == direction && t.status_valid? }).count) : nil
 	end
 	
 	def destination_name
