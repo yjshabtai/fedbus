@@ -165,7 +165,7 @@ class TicketsController < ApplicationController
 		@depart = params[:dep_id] == '0' ? @bus.depart_time : @bus.arrive_time
 		@ticks_avail = params[:dep_id] == '0' ? @bus.available_tickets('from_waterloo') : @bus.available_tickets('to_waterloo')
 
-		@return_buses = params[:dep_id] == '0' ? (@bus.find_returns.collect {|rb| [rb.destination.name + ', ' + rb.depart_time.strftime("%k:%M"), rb.id]}) : [['UW Campus', 0]]
+		@return_dates = @bus.find_returns(params[:dep_id] == '0' ? true : false).select{|rb| !rb.maximum_seats || rb.available_tickets(params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo') > 0}.collect{|rb| rb.date}.uniq
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying4") : (render :partial => "tickets/selling4")
 	end

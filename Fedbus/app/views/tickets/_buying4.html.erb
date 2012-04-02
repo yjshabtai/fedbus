@@ -6,12 +6,15 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 <% end %>
 <br/>
 
-<% if !@return_buses.empty? %>
+<% if !@return_dates.empty? %>
 	
-	Return From:</br>
-	<%= select("return", "bus_id", @return_buses, {:include_blank => 'None'}, :class => 'test') %></br>
+	Return On:</br>
+	<%= select("return", "date", @return_dates, {:include_blank => 'Do not return'}) %><br/>
 
-	<br/><br/>
+	<!-- Return From:</br>
+	</br>
+
+	<br/><br/>-->
 <% end %>
 
 

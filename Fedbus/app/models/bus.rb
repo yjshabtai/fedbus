@@ -47,14 +47,37 @@ class Bus < ActiveRecord::Base
 	end
 
 	# Returns the possible return buses
-	def find_returns
+	def find_returns (to_waterloo = false)
+
+		# Array of all of the return buses
+		buses = []
+
+		if date.wday == 5
+			if to_waterloo
+				buses = buses + (ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days)) : Bus.where(:date => (date + 2.days)))
+			else
+				buses = buses + (ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days), :destination_id => destination_id) : Bus.where(:date => (date + 2.days), :destination_id => destination_id))
+			end
+		end
+
+		# If there is a later bus returning on the same day then it is a valid return bus
+		if to_waterloo
+			buses = buses + Bus.where("date = ? AND depart_time >= ?", date, return_time)
+		else
+			buses = buses + Bus.where("date = ? AND depart_time >= ?", date, return_time)
+		end
+
+		
+
 		# If it is a friday and the next sunday is a reading week then the return bus will be the following sunday
 		# If the next sunday is not a reading week then it will be on that sunday
-		if date.wday == 5 
-			ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days)) : Bus.where(:date => (date + 2.days))
-		else
-			[]
-		end
+		#if date.wday == 5 
+		#	ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (#date + 9.days)).select{|b| b.available_tickets(:to_waterloo)} :# Bus.where(:date => (date + 2.days)).select{|b| !b.#maximum_seats || b.available_tickets(:to_waterloo)}
+		#else
+		#	[]
+		#end
+
+		buses
 	end
 	
 	def sold_tickets(direction)
