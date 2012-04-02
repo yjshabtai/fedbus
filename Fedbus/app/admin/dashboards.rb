@@ -41,13 +41,23 @@ ActiveAdmin::Dashboards.build do
   # section "Membership Summary", :if => :memberships_enabled?
   # section "Membership Summary", :if => Proc.new { current_admin_user.account.memberships.any? }
 
-  section "Recent destinations... this will be deleted" do
-    table_for Destination.order("created_at desc").limit(5) do
-      column :name do |dest|
-        link_to dest.name, [:admin, dest]
+  section "Open Buses", :priority => 1 do
+    table_for Bus.where(:status => "open") do
+      column :name do |b|
+        link_to b.name, [:admin, b]
       end
+      column :date
+    end
+    strong { link_to "View All Buses", admin_buses_path }
+  end
+
+  section "Recent Logs" do
+    table_for TicketLog.order("created_at DESC").limit(10) do
+      column :id do |l|
+        link_to l.id, [:admin, l]
+      end
+      column :log
       column :created_at
     end
-    strong { link_to "View All Destinations", admin_destinations_path }
   end
 end
