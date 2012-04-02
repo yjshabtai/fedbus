@@ -62,9 +62,9 @@ class Bus < ActiveRecord::Base
 
 		# If there is a later bus returning on the same day then it is a valid return bus
 		if to_waterloo
-			buses = buses + Bus.where("date = ? AND depart_time >= ?", date, return_time)
+			buses = buses + Bus.where("date = ? AND arrive_time > ?", date, arrive_time)
 		else
-			buses = buses + Bus.where("date = ? AND depart_time >= ?", date, return_time)
+			buses = buses + Bus.where("date = ? AND depart_time > ? AND destination_id = ?", date, return_time, destination_id)
 		end
 
 		

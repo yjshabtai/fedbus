@@ -15,6 +15,7 @@ FedbusRails32::Application.routes.draw do
   get 'tickets/find_dests'
   get 'tickets/find_deps'
   get 'tickets/ticket_data'
+  get 'tickets/find_returns'
   get 'tickets/update_price'
   get 'tickets/buy'
   get 'tickets/sell'

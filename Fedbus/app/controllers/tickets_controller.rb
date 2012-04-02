@@ -173,10 +173,18 @@ class TicketsController < ApplicationController
 	# Gets the locations for departure on a given date
 	def find_deps
 		# This will list all of the buses with departures on this date.
-		# There will be at least one because the date selector uses the same formula.
+		# There will be at least one because the date selector uses a similar formula.
 		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets('to_waterloo') > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]})
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying2") : (render :partial => "tickets/selling2")
+	end
+
+	# Gets the return buses for the given bus and date
+	def find_returns
+		bus = Bus.find(params[:bus_id])
+		@return_buses = bus.find_returns(params[:dep_id] == '0' ? true : false).select{|rb| (!rb.maximum_seats || rb.available_tickets(params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo') > 0) && rb.date == params[:ret_date].to_date}.collect{|rb| [rb.destination.name, rb.id]}
+
+		render :partial => "tickets/buying5"
 	end
 
 	# Gets the price of the ticket to be purchased if return trip is selected

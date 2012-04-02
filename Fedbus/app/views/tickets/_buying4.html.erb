@@ -8,13 +8,13 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 
 <% if !@return_dates.empty? %>
 	
-	Return On:</br>
-	<%= select("return", "date", @return_dates, {:include_blank => 'Do not return'}) %><br/>
+	Return On:<br/>
+	<%= select("return", "date", @return_dates, {:include_blank => 'Do not return'}, :class => "return_time") %><br/>
 
-	<!-- Return From:</br>
-	</br>
+	<div class="return_from">
+	</div>
 
-	<br/><br/>-->
+	<br/>
 <% end %>
 
 

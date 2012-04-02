@@ -75,7 +75,7 @@ function get_data( bus, dep ) {
 		success: function(data) {
 			$('.ticket_info').show();
 			$('.ticket_info').html(data);
-			info_loader( bus );
+			info_loader();
 		},
 		error: function(data) {
 			alert('There is something wrong here. Get an admin.');
@@ -84,27 +84,26 @@ function get_data( bus, dep ) {
 }
 
 // Sets the javascripts for the trip info and buy button
-function info_loader( bus ) {
-	var ret_b = false;
+function info_loader() {
 
-	$('.return_chk').change(function() {
-		if ( $(this).attr('checked') ) {
-			ret_b = true;
-		}
-		else {
-			ret_b = false;
-		}
+	$('.return_time').change(function() {
+
+		var ret_date = $(this).val();
+		var bus = $('.dest_select').val();
+		var dep = $('.dep_select').val();
+		
 		$.ajax({
-			url: '/tickets/update_price',
+			url: '/tickets/find_returns',
 			type: 'get',
-			data: { bus_id: bus, ret: ret_b },
+			data: { bus_id: bus, dep_id: dep, ret_date: ret_date },
 			success: function(data) {
-				$('.ticket_price').html(data);
+				$('.return_from').html(data);
 			},
 			error: function(data) {
-				alert('The server is not working.');
+				alert('There is something wrong here. Get an admin.');
 			}
 		});
+
 	});
 
 	$('.cart_ticket').click(function() {
