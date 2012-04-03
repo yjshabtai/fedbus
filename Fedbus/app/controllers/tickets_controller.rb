@@ -182,15 +182,25 @@ class TicketsController < ApplicationController
 	# Gets the return buses for the given bus and date
 	def find_returns
 		bus = Bus.find(params[:bus_id])
-		@return_buses = bus.find_returns(params[:dep_id] == '0' ? true : false).select{|rb| (!rb.maximum_seats || rb.available_tickets(params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo') > 0) && rb.date == params[:ret_date].to_date}.collect{|rb| [rb.destination.name, rb.id]}
+		@return_buses = bus.find_returns(params[:dep_id] == '0' ? true : false).select{|rb| (!rb.maximum_seats || rb.available_tickets(params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo') > 0) && rb.date == params[:ret_date].to_date}.collect{|rb| [(params[:dep_id] != '0' ? 'UW Campus' : rb.destination.name) + ', ' + ((params[:dep_id] == '0') ? rb.arrive_time.strftime("%k:%M") : rb.depart_time.strftime("%k:%M")), rb.id]}
 
 		render :partial => "tickets/buying5"
+	end
+
+	# Gets the chosen return bus' info
+	def ticket_data_r
+		@bus_r = Bus.find(params[:rb_id])
+		@arrive_r = (params[:dep_id] == '0') ? @bus_r.return_time : @bus_r.arrive_time
+		@depart_r = (params[:dep_id] == '0') ? @bus_r.arrive_time : @bus_r.depart_time
+		@ticks_avail_r = params[:dep_id] == '0' ? @bus_r.available_tickets('to_waterloo') : @bus_r.available_tickets('from_waterloo')
+
+		render :partial => "tickets/buying6"
 	end
 
 	# Gets the price of the ticket to be purchased if return trip is selected
 	def update_price
 		bus = Bus.find(params[:bus_id])
-		@ticket_price = params[:ret] == 'true' ? ((bus.ticket_price - 1.0) * 2.0) : bus.ticket_price
+		@ticket_price = params[:ret] == 'true' ? ((bus.ticket_price - 1.0) + (Bus.find(params[:rbus_id]).ticket_price - 1.0)) : bus.ticket_price
 
 		render :partial => "tickets/ticketprice"
 	end

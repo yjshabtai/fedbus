@@ -118,6 +118,7 @@ function info_loader() {
 				success: function(data) {
 					$('.return_from').show();
 					$('.return_from').html(data);
+					return_loader();
 				},
 				error: function(data) {
 					alert('There is something wrong here. Get an admin.');
@@ -127,12 +128,61 @@ function info_loader() {
 		else {
 			$('.return_from').html('');
 			$('.return_from').hide();
+			price_change();
 		}
 
 	});
 
 	$('.cart_ticket').click(function() {
 		reserve( $('.dest_select').val(), $('.dep_select').val(), ret_b );
+	});
+}
+
+function return_loader() {
+	price_change();
+	return_info_change();
+	$('.return_bus').change(function() {
+		price_change();
+		return_info_change();
+	});
+}
+
+function price_change() {
+	var bus = $('.dest_select').val();
+	var r_bus = $('.return_bus').val();
+
+	var returning = false;
+	if ( $('.return_time').val().length > 1 ) {
+		returning = true;
+	}
+
+	$.ajax({
+		url: '/tickets/update_price',
+		type: 'get',
+		data: { bus_id: bus, rbus_id: r_bus, ret: returning },
+		success: function(data) {
+			$('.ticket_price').html(data);
+		},
+		error: function(data) {
+			alert('There is something wrong here. Get an admin.');
+		}
+	});
+}
+
+function return_info_change() {
+	var r_bus = $('.return_bus').val();
+	var dep = $('.dep_select').val();
+
+	$.ajax({
+		url: '/tickets/ticket_data_r',
+		type: 'get',
+		data: { rb_id: r_bus, dep_id: dep },
+		success: function(data) {
+			$('.rbus_info').html(data);
+		},
+		error: function(data) {
+			alert('There is something wrong here. Get an admin.');
+		}
 	});
 }
 
