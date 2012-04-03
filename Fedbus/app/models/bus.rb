@@ -37,6 +37,7 @@ class Bus < ActiveRecord::Base
 		# finds the direction with the most amount of tickets
 		max_tickets = [sold_tickets(:from_waterloo), sold_tickets(:to_waterloo)].max
 
+		# How many buses filled so far
 		filled_buses = max_tickets / seats_per_bus
 
 		# The maximum amount of seats is the current number of buses needed + whatever is needed to fill up the last bus if it is unfilled
@@ -52,6 +53,8 @@ class Bus < ActiveRecord::Base
 		# Array of all of the return buses
 		buses = []
 
+		# If it is a friday and the next sunday is a reading week then the return bus will be the following sunday
+		# If the next sunday is not a reading week then it will be on that sunday
 		if date.wday == 5
 			if to_waterloo
 				buses = buses + (ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days)) : Bus.where(:date => (date + 2.days)))
@@ -67,23 +70,15 @@ class Bus < ActiveRecord::Base
 			buses = buses + Bus.where("date = ? AND depart_time > ? AND destination_id = ?", date, return_time, destination_id)
 		end
 
-		
-
-		# If it is a friday and the next sunday is a reading week then the return bus will be the following sunday
-		# If the next sunday is not a reading week then it will be on that sunday
-		#if date.wday == 5 
-		#	ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (#date + 9.days)).select{|b| b.available_tickets(:to_waterloo)} :# Bus.where(:date => (date + 2.days)).select{|b| !b.#maximum_seats || b.available_tickets(:to_waterloo)}
-		#else
-		#	[]
-		#end
-
 		buses
 	end
 	
+	# Returns the number of valid tickets for the given direction (to_waterloo or from_waterloo)
 	def sold_tickets(direction)
 		 (tickets.select {|t| t.direction == direction && t.status_valid? }).count
 	end
 
+	# Returns the number of available tickets for the given direction (to_waterloo or from_waterloo)
 	def available_tickets(direction)
 		maximum_seats ? (maximum_seats - (tickets.select {|t| t.direction == direction && t.status_valid? }).count) : nil
 	end

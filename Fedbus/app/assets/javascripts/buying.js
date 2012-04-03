@@ -10,7 +10,13 @@ $(document).ready(function() {
 
 	$('.departure_field').hide();
 	$('.date_select').change(function() {
-		get_deps( $(this).val() );
+		if ( $(this).val().length > 0 ) {
+			get_deps( $(this).val() );
+		}
+		else {
+			$('.departure_field').html('');
+			$('.departure_field').hide();
+		}
 	});
 
 });
@@ -37,7 +43,13 @@ function get_deps( date ) {
 function dep_loader() {
 	$('.destination_field').hide();
 	$('.dep_select').change(function() {
-		get_dests( $(this).val(), $('.date_select').val() );
+		if ( $(this).val().length > 0 ) {
+			get_dests( $(this).val(), $('.date_select').val() );
+		}
+		else {
+			$('.destination_field').html('');
+			$('.destination_field').hide();
+		}
 	});
 }
 
@@ -62,7 +74,13 @@ function get_dests( dep, date ) {
 function dest_loader() {
 	$('.ticket_info').hide();
 	$('.dest_select').change(function() {
-		get_data( $(this).val(), $('.dep_select').val() );
+		if ( $(this).val().length > 0 ) {
+			get_data( $(this).val(), $('.dep_select').val() );
+		}
+		else {
+			$('.ticket_info').html('');
+			$('.ticket_info').hide();
+		}
 	});
 }
 
@@ -87,22 +105,29 @@ function get_data( bus, dep ) {
 function info_loader() {
 
 	$('.return_time').change(function() {
+		if ( $(this).val().length > 0 ) {
 
-		var ret_date = $(this).val();
-		var bus = $('.dest_select').val();
-		var dep = $('.dep_select').val();
-		
-		$.ajax({
-			url: '/tickets/find_returns',
-			type: 'get',
-			data: { bus_id: bus, dep_id: dep, ret_date: ret_date },
-			success: function(data) {
-				$('.return_from').html(data);
-			},
-			error: function(data) {
-				alert('There is something wrong here. Get an admin.');
-			}
-		});
+			var ret_date = $(this).val();
+			var bus = $('.dest_select').val();
+			var dep = $('.dep_select').val();
+			
+			$.ajax({
+				url: '/tickets/find_returns',
+				type: 'get',
+				data: { bus_id: bus, dep_id: dep, ret_date: ret_date },
+				success: function(data) {
+					$('.return_from').show();
+					$('.return_from').html(data);
+				},
+				error: function(data) {
+					alert('There is something wrong here. Get an admin.');
+				}
+			});
+		}
+		else {
+			$('.return_from').html('');
+			$('.return_from').hide();
+		}
 
 	});
 
