@@ -37,3 +37,20 @@
 		@include button($buttoncolor);
 	}
 }
+
+.businfo_pane, .rbusinfo_pane {
+
+	&:hover {
+		opacity: 0.8;
+		cursor: pointer;
+	}
+}
+
+.info_pane {
+	position: fixed;
+	right: 0;
+	top: 0;
+	height: 100%;
+	width: 600px;
+	background-color: darken($contentbg, 50%);
+}

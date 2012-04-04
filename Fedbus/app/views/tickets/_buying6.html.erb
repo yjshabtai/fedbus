@@ -1,8 +1,11 @@
 <br/><%= @bus_r.name %><br/>
+
 Departure Time: <%= @depart_r.strftime("%k:%M") %> Arrival Time: <%= @arrive_r.strftime("%k:%M") %><br/>
+
 <% if @bus_r.maximum_seats %>
 	<%= @ticks_avail_r %> tickets available.
 	<br/>
 <% end %>
-<%= image_tag("expander.png", :class => "rbusinfo_pane") %>
+
+<%= image_tag("expander.png", :class => "rbusinfo_pane") %><br/>
 <br/>

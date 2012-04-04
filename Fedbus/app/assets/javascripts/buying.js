@@ -133,6 +133,10 @@ function info_loader() {
 
 	});
 
+	$('.info_pane').click(function() {
+		pane_info(this);
+	});
+
 	$('.cart_ticket').click(function() {
 		reserve( $('.dest_select').val(), $('.dep_select').val(), ret_b );
 	});
@@ -199,4 +203,8 @@ function reserve( bus, dep, ret_b ) {
 			alert('There is something wrong here. Get an admin.');
 		}
 	});
+}
+
+function pane_info( pane ) {
+	$(pane).animate({ "padding-right": "50px"});
 }

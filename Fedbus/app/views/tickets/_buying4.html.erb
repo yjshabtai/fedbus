@@ -4,7 +4,7 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 	<%= @ticks_avail %> tickets available.
 	<br/>
 <% end %>
-<%= image_tag("expander.png", :class => "businfo_pane") %>
+<%= image_tag("expander.png", :class => "businfo_pane") %>temp button<br/>
 <br/>
 
 <% if !@return_dates.empty? %>
@@ -22,3 +22,7 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 Cost: <span class="ticket_price"><%= number_to_currency(@bus.ticket_price) %></span><br/><br/>
 
 <button class="cart_ticket">Add To Cart</button>
+
+<div class="info_pane">
+	info stuff about ticket
+</div>
