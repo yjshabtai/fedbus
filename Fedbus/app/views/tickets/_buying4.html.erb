@@ -4,6 +4,7 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 	<%= @ticks_avail %> tickets available.
 	<br/>
 <% end %>
+<%= image_tag("expander.png", :class => "businfo_pane") %>
 <br/>
 
 <% if !@return_dates.empty? %>
