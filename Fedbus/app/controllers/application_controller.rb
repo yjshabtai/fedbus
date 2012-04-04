@@ -49,8 +49,11 @@ class ApplicationController < ActionController::Base
   # Returns a boolean indicating whether the client is an authenticated user.
   def logged_in?
 	if session[:cas_user]
-		return false unless User.where(:userid => session[:cas_user]).count > 0
-		return true
+		if User.where(:userid => session[:cas_user]).count > 0
+		  true
+    else
+      false
+    end
 	end
   end
 

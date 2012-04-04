@@ -24,5 +24,7 @@ Cost: <span class="ticket_price"><%= number_to_currency(@bus.ticket_price) %></s
 <button class="cart_ticket">Add To Cart</button>
 
 <div class="info_pane">
-	info stuff about ticket
+	<h3><%= @destination.name %></h3>
+	<%= @destination.address %>
+	
 </div>

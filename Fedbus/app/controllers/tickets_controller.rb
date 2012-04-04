@@ -161,6 +161,7 @@ class TicketsController < ApplicationController
 	def ticket_data
 
 		@bus = Bus.find(params[:bus_id])
+		@destination = @bus.destination
 		@arrive = (params[:dep_id] == '0') ? @bus.arrive_time : @bus.return_time
 		@depart = params[:dep_id] == '0' ? @bus.depart_time : @bus.arrive_time
 		@ticks_avail = params[:dep_id] == '0' ? @bus.available_tickets('from_waterloo') : @bus.available_tickets('to_waterloo')

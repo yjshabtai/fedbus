@@ -133,9 +133,13 @@ function info_loader() {
 
 	});
 
-	$('.info_pane').click(function() {
-		pane_info(this);
+	$('.businfo_pane').click(function() {
+		pane_info( $('.info_pane') );
 	});
+
+	$('.info_pane').click(function() {
+		pane_info_close( $('.info_pane') );
+	})
 
 	$('.cart_ticket').click(function() {
 		reserve( $('.dest_select').val(), $('.dep_select').val(), ret_b );
@@ -206,5 +210,10 @@ function reserve( bus, dep, ret_b ) {
 }
 
 function pane_info( pane ) {
-	$(pane).animate({ "padding-right": "50px"});
+	$(pane).animate({ "right": "-1%"}, 500);
+}
+
+function pane_info_close( pane ) {
+	$(pane).animate({ "right": "-50%"}, 500);
+
 }

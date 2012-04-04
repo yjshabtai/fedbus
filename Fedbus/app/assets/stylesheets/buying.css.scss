@@ -48,9 +48,9 @@
 
 .info_pane {
 	position: fixed;
-	right: 0;
+	right: -50%;
 	top: 0;
 	height: 100%;
-	width: 600px;
+	width: 50%;
 	background-color: darken($contentbg, 50%);
 }
