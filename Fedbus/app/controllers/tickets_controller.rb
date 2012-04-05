@@ -1,3 +1,5 @@
+require 'keys.rb'
+
 class TicketsController < ApplicationController
 	
 	# TODO: Document the control flow for buying and selling tickets here
@@ -133,6 +135,7 @@ class TicketsController < ApplicationController
 	# GET /tickets/buy.json
 	def buy
 		@dates = Bus.where(:status => :open).select{|b| !b.maximum_seats || b.available_tickets('from_waterloo') > 0 || b.available_tickets('to_waterloo') > 0 }.collect {|b| b.date }.uniq
+		@gmapkey = Keys.gmap
 	end
 
 	def find_user

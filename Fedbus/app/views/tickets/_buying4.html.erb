@@ -1,3 +1,5 @@
+
+
 <br/><%= @bus.name %><br/>
 Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/>
 <% if @bus.maximum_seats %>
@@ -5,6 +7,8 @@ Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strft
 	<br/>
 <% end %>
 <%= image_tag("expander.png", :class => "businfo_pane") %>temp button<br/>
+
+
 <br/>
 
 <% if !@return_dates.empty? %>
@@ -25,6 +29,9 @@ Cost: <span class="ticket_price"><%= number_to_currency(@bus.ticket_price) %></s
 
 <div class="info_pane">
 	<h3><%= @destination.name %></h3>
-	<%= @destination.address %>
+	<div class="addr"><%= @destination.address %></div>
+	<div class="map">
+	</div>
+	<div class="desc"><%= @destination.location_description %></div>
 	
 </div>

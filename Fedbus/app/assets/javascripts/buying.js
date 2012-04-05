@@ -19,6 +19,8 @@ $(document).ready(function() {
 		}
 	});
 
+	$("#map").gMap();
+
 });
 
 // The ajax function to get the departure locations on the given date
@@ -99,6 +101,7 @@ function get_data( bus, dep ) {
 			alert('There is something wrong here. Get an admin.');
 		}
 	});
+
 }
 
 // Sets the javascripts for the trip info and buy button
@@ -135,6 +138,10 @@ function info_loader() {
 
 	$('.businfo_pane').click(function() {
 		pane_info( $('.info_pane') );
+
+		load_map( $('.addr').html(), $('.map') );
+			
+		
 	});
 
 	$('.info_pane').click(function() {
@@ -144,6 +151,20 @@ function info_loader() {
 	$('.cart_ticket').click(function() {
 		reserve( $('.dest_select').val(), $('.dep_select').val(), ret_b );
 	});
+}
+
+function load_map( addr, map ) {
+	options = 
+	{
+	    address:                addr,
+	    zoom:                   15,
+	    scrollwheel:            false,
+	    maptype:                G_NORMAL_MAP,
+	    html_prepend:           '<div class="gmap_marker">',
+	    html_append:            '</div>'
+	};
+
+	$(map).gMap( options );
 }
 
 function return_loader() {
@@ -210,10 +231,10 @@ function reserve( bus, dep, ret_b ) {
 }
 
 function pane_info( pane ) {
-	$(pane).animate({ "right": "-1%"}, 500);
+	$(pane).animate({ "right": "-4%"}, 500);
 }
 
 function pane_info_close( pane ) {
-	$(pane).animate({ "right": "-50%"}, 500);
+	$(pane).animate({ "right": "-54%"}, 500);
 
 }

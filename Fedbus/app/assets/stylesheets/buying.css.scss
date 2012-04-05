@@ -48,9 +48,14 @@
 
 .info_pane {
 	position: fixed;
-	right: -50%;
+	right: -54%;
 	top: 0;
 	height: 100%;
 	width: 50%;
+	padding: 2%;
 	background-color: darken($contentbg, 50%);
+	.map {
+		width: 90%;
+		height: 50%;
+	}
 }
