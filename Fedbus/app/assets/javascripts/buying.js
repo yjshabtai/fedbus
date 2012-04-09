@@ -147,7 +147,7 @@ function info_loader() {
 	})
 
 	$('.cart_ticket').click(function() {
-		reserve( $('.dest_select').val(), $('.dep_select').val(), ret_b );
+		reserve();
 	});
 }
 
@@ -233,11 +233,23 @@ function ret_expander() {
 }
 
 // Reserves the ticket for the selected bus and maybe return bus
-function reserve( bus, dep, ret_b ) {
+function reserve() {
+	var ret = false;
+	var ret_id = 0;
+	if ( $('.return_time').val().length > 0 ) {
+		ret = true;
+		ret_id = $('.return_bus').val();
+	}
+	var dep_id = $('.dest_select').val();
+	var from_uw = false;
+	if ( $('.dep_select').val() == '0' ) {
+		from_uw	= true;
+	}
+
 	$.ajax({
 		url: '/tickets/reserve',
 		type: 'post',
-		data: { bus_id: bus, dep_id: dep, ret: ret_b, buying: true },
+		data: { ret: ret, ret_id: ret_id, dep_id: dep_id, from_uw: from_uw, buying: true },
 		success: function(data) {
 			$('.buybox').html(data);
 		},

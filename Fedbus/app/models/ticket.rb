@@ -5,6 +5,10 @@ class Ticket < ActiveRecord::Base
 	belongs_to :bus
 	belongs_to :user
 	belongs_to :invoice
+
+	belongs_to :return_of, :class_name => "Ticket", :foreign_key => "return_of"
+	has_one :return_ticket, :class_name => "Ticket", :foreign_key => "return_of"
+	
 	has_many :ticket_logs
 	
 	validates_presence_of :user_id, :bus_id, :direction, :status
