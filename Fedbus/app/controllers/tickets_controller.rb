@@ -194,6 +194,7 @@ class TicketsController < ApplicationController
 	# Gets the chosen return bus' info
 	def ticket_data_r
 		@bus_r = Bus.find(params[:rb_id])
+		@destination_r = @bus_r.destination
 		@arrive_r = (params[:dep_id] == '0') ? @bus_r.return_time : @bus_r.arrive_time
 		@depart_r = (params[:dep_id] == '0') ? @bus_r.arrive_time : @bus_r.depart_time
 		@ticks_avail_r = params[:dep_id] == '0' ? @bus_r.available_tickets('to_waterloo') : @bus_r.available_tickets('from_waterloo')

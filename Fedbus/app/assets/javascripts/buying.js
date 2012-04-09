@@ -1,3 +1,4 @@
+// When the document is ready prepare the defaults
 $(document).ready(function() {
 	// Have the ajax loader show when ajax is loading
 	$('.ajax_loader').hide();
@@ -19,8 +20,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#map").gMap();
-
 });
 
 // The ajax function to get the departure locations on the given date
@@ -30,6 +29,7 @@ function get_deps( date ) {
 		type: 'get',
 		data: { date: date, buying: true },
 		success: function(data) {
+			// Show the departure field and load up some more js
 			$('.departure_field').show();
 			$('.departure_field').html(data);
 			dep_loader();
@@ -39,7 +39,6 @@ function get_deps( date ) {
 		}
 	});
 }
-
 
 // Sets the javascripts for the departure selecting partial _buying2.html.erb
 function dep_loader() {
@@ -136,16 +135,15 @@ function info_loader() {
 
 	});
 
-	$('.businfo_pane').click(function() {
+	$('.expander').click(function() {
+		$(this).hide();
 		pane_info( $('.info_pane') );
-
-		load_map( $('.addr').html(), $('.map') );
-			
-		
+		load_map( $('.info_addr').html(), $('.info_map') );
 	});
 
 	$('.info_pane').click(function() {
 		pane_info_close( $('.info_pane') );
+		$('.expander').show();
 	})
 
 	$('.cart_ticket').click(function() {
@@ -159,9 +157,7 @@ function load_map( addr, map ) {
 	    address:                addr,
 	    zoom:                   15,
 	    scrollwheel:            false,
-	    maptype:                G_NORMAL_MAP,
-	    html_prepend:           '<div class="gmap_marker">',
-	    html_append:            '</div>'
+	    maptype:                G_NORMAL_MAP
 	};
 
 	$(map).gMap( options );
@@ -208,11 +204,32 @@ function return_info_change() {
 		data: { rb_id: r_bus, dep_id: dep },
 		success: function(data) {
 			$('.rbus_info').html(data);
+			ret_expander();
 		},
 		error: function(data) {
 			alert('There is something wrong here. Get an admin.');
 		}
 	});
+
+	
+	
+}
+
+// Sets the return expander to show the map and info of the selected bus
+function ret_expander() {
+
+	// The expander button
+	$('.expander_r').click(function() {
+		$(this).hide();
+		pane_info( $('.info_pane_r') );
+		load_map( $('.info_addr_r').html(), $('.info_map_r') );
+	});
+
+	// Allows the pane to be closed
+	$('.info_pane_r').click(function() {
+		pane_info_close( $(this) );
+		$('.expander_r').show();
+	})
 }
 
 // Reserves the ticket for the selected bus and maybe return bus
@@ -231,10 +248,10 @@ function reserve( bus, dep, ret_b ) {
 }
 
 function pane_info( pane ) {
-	$(pane).animate({ "right": "-4%"}, 500);
+	$(pane).animate({ "right": "-0%"}, 500);
 }
 
 function pane_info_close( pane ) {
-	$(pane).animate({ "right": "-54%"}, 500);
+	$(pane).animate({ "right": "-50%"}, 500);
 
 }
