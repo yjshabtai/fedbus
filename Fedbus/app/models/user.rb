@@ -59,12 +59,9 @@ class User < ActiveRecord::Base
 		User.find_by_student_number_hash Digest::SHA256.hexdigest(num)
 	end
 	
+	# Gets all of the valid tickets the user has for a given date
 	def tickets_for_date date
-		return tickets.select { |t|
-			if t.status_valid? && t.bus.date == date
-				true
-			end
-		}
+		tickets.select { |t| t.status_valid? && t.bus.date == date }
 	end
 
 	# Gets the current reserved tickets of the user
