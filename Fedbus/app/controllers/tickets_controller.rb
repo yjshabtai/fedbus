@@ -37,11 +37,11 @@ class TicketsController < ApplicationController
 		@tickets = []
 
 		# Is the ticket being sold by a vendor or being purchased online?
-		if !buying && curr_user.has_permission?(:ticket_selling)
-
+		if !buying #&& curr_user.has_permission?(:ticket_selling)
+			render :partial => "tickets/reserve"
 		else
 			active_tickets = curr_user.tickets_for_date(bus.date)
-			active_tickets_r = returning ? curr_user.tickets_for_date(return_bus.date) : []
+			active_tickets_r = returning ? curr_user.tickets_for_date(bus_r.date) : []
 
 			if !active_tickets.empty?
 				# Iff one active ticket is on this day and
@@ -64,8 +64,10 @@ class TicketsController < ApplicationController
 			end
 
 			if @errors.empty?
-
+				@tickets << Ticket.first
 			end
+
+			render :partial => "tickets/reserve"
 		end
 
 

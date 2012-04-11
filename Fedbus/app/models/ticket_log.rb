@@ -4,10 +4,6 @@ class TicketLog < ActiveRecord::Base
 	
 	validates_presence_of :log, :ticket_id
 	
-	def objs_type
-		"ticket_logs"
-	end
-	
 	def self.make_log log_message, ticket, user = nil
 		l = TicketLog.new
 		l.log = log_message
