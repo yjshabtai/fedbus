@@ -120,6 +120,12 @@ class UsersController < ApplicationController
   def cart
     @curr_user = current_user
 
+    @curr_user.set_prices
     @tickets = @curr_user.reserved_tickets
+    @price = 0.00
+
+    @tickets.each do |tick|
+      @price = @price + tick.ticket_price
+    end
   end
 end

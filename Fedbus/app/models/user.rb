@@ -69,6 +69,40 @@ class User < ActiveRecord::Base
 		tickets.select {|t| t.status == 'reserved'}
 	end
 
+	# Sets the current costs of all of the user's reserved tickets
+	def set_prices
+		tickets = reserved_tickets
+		tickets.each do |tick|
+			# If the ticket is not set as a return ticket but it is one then its prices must be set correctly
+	        if tick.return_ticket == nil && tick.return_of == nil
+	            (tickets - [tick]).each do |other|
+		            if other.bus.find_returns.include? tick.bus
+			            other.return_ticket = tick
+			            other.ticket_price = other.bus.ticket_price - 1.00
+			            other.save
+			            tick.ticket_price = tick.bus.ticket_price - 1.00
+			            tick.save
+			            break
+		            end
+		        end
+		          
+		    # If the ticket has a return (or is a return) but the other ticket doesn't exist then the price must be reset
+		    elsif (tick.return_ticket != nil && !tickets.include?(tick.return_ticket)) || (tick.return_of != nil && !tickets.include?(tick.return_of))
+		        tick.return_ticket = nil
+		        tick.return_of = nil
+		        tick.ticket_price = tick.bus.ticket_price
+		        tick.save
+		        
+		    # Finally, if the existing returns are valid make sure that the discounted prices are correct
+		    else
+		        [tick, (tick.return_ticket ? tick.return_ticket : tick.return_of)].each do |t|
+		            t.ticket_price = t.bus.ticket_price - 1.00
+		            t.save
+		        end
+		    end
+		end
+	end
+
 	# Gets the current total cart cost for the user
 	def cart_total
 		total = 0.0
