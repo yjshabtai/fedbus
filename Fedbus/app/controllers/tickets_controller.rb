@@ -15,16 +15,18 @@ class TicketsController < ApplicationController
 	def reserve
 		# Get post data
 		bus = Bus.find(params[:dep_id])
-		from_uw = params[:from_uw] == 'true' ? true : false
+		dir = params[:from_uw] == 'true' ? "from_waterloo" : "to_waterloo"
 		buying = params[:buying] == 'true' ? true : false
 		all_returns = bus.find_returns
 
 		# Get returning data
 		returning = false
 		bus_r = 0
+		dir_r = ""
 		if params[:ret] == 'true'
 			returning = true
 			bus_r = Bus.find(params[:ret_id])
+			dir_r = dir == "from_waterloo" ? "to_waterloo" : "from_waterloo"
 
 			# If the user cheated with the post data then disallow it
 			if !all_returns.include?(bus_r)
@@ -36,12 +38,14 @@ class TicketsController < ApplicationController
 		@errors = []
 		@tickets = []
 
-		Log.make_log "Beginning reserving of tickets", "User", curr_user.id, curr_user.id
-
 		# Is the ticket being sold by a vendor or being purchased online?
 		if !buying #&& curr_user.has_permission?(:ticket_selling)
+			#Log.make_log "Beginning sale of tickets", "User", buyer, curr_user.id
+
 			render :partial => "tickets/reserve"
 		else
+			Log.make_log "Began reserving of tickets", "User", curr_user.id, curr_user.id
+
 			active_tickets = curr_user.tickets_for_date(bus.date)
 			active_tickets_r = returning ? curr_user.tickets_for_date(bus_r.date) : []
 
@@ -56,57 +60,32 @@ class TicketsController < ApplicationController
 						( active_tickets[0].bus.find_returns.include?(bus) &&
 						!returning )
 					)) == false
-					# error
+					@errors << "You already have a ticket on #{bus.date.strftime("%a, %B %e")}"
+					Log.make_log "Tried to buy an invalid ticket", "User", curr_user.id, curr_user.id
 				end
 			end
 
 			# You can not return from somewhere and then have another ticket on the same day if that ticket is not what the return ticket is returning from
 			if !active_tickets_r.empty?
-				#error
+				@errors << "You already have a ticket on #{bus_r.date.strftime("%a, %B %e")}"
+				Log.make_log "Tried to buy an invalid ticket", "User", curr_user.id, curr_user.id
 			end
 
+			# If there are no errors then the tickets are reserved
 			if @errors.empty?
-				@tickets << Ticket.first
+				ticket = Ticket.make_ticket curr_user, bus, dir
+				@tickets << ticket
+
+				if returning
+					ticket_r = Ticket.make_ticket curr_user, bus_r, dir_r
+					ticket.return_ticket = ticket_r
+					ticket.save
+					@tickets << ticket_r
+				end
 			end
 
 			render :partial => "tickets/reserve"
 		end
-
-
-
-
-
-	#	dir = params[:dep_id] == '0' ? 'from_waterloo' : 'to_waterloo'
-	#	bus = Bus.find(params[:bus_id])
-	#	return_bus = params[:ret] == 'true' ? bus.find_return : false
-	#	buying = params[:buying] == 'true' ? true : false
-	#	
-	#	
-#
-	#	# Is the ticket being sold by a vendor or being bought online?
-	#	if !buying && curr_user.has_permission?(:ticket_selling)
-#
-	#	else
-	#		if !curr_user.tickets_for_date(bus.date).empty?
-	#			@errors << "You already have a ticket on " + bus.date.to_s
-	#		end
-	#		if return_bus && !curr_user.tickets_for_date(return_bus.date).empty?
-	#			@errors << "You already have a ticket on " + return_bus.date.to_s
-	#		end
-#
-	#		if @errors.empty?
-	#			@tickets << Ticket.make_ticket(curr_user, bus, dir)
-	#			if return_bus
-	#				@tickets << Ticket.make_ticket(curr_user, return_bus, (params#[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo'))
-	#				@tickets.each do |tick|
-	#					tick.ticket_price = tick.bus.ticket_price - 1.0
-	#					tick.save
-	#				end
-	#			end
-	#		end
-#
-	#		render :partial => "tickets/reserve"
-	#	end
 
 	end
 

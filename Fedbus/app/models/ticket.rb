@@ -24,6 +24,7 @@ class Ticket < ActiveRecord::Base
 		
 		if t.save
 			TicketLog.make_log (seller ? ("Ticket sold by vendor") : "Ticket reserved by system"), t, seller
+			Log.make_log (seller ? ("Ticket sold") : "Ticket reserved"), "Ticket", t.id, (seller ? seller.id : 0)
 
 			t
 		else
