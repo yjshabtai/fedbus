@@ -1,14 +1,14 @@
 class Log < ActiveRecord::Base
-	# type is the model type of log (Ticket, User, Bus, Trip, etc.)
-	# source_id is the id of the type
+	# model is the model type of log (Ticket, User, Bus, Trip, etc.)
+	# source_id is the id of the model
 
-	validates_presence_of :message, :type, :source_id
+	validates_presence_of :message, :model, :source_id
 
 	# Creates and returns a log
-	def self.make_log message, type, source, user = nil
+	def self.make_log message, model, source, user = nil
 		l = Log.new
 		l.message = message
-		l.type = type.classify
+		l.model = model.classify
 		l.source_id = source
 		l.user_id = user ? user : 0
 
@@ -21,7 +21,7 @@ class Log < ActiveRecord::Base
 
 	# Finds the object that the log was created for
 	def source
-		type.constantize.find(source_id)
+		model.constantize.find(source_id)
 	end
 
 end

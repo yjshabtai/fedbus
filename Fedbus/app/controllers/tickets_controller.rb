@@ -36,6 +36,8 @@ class TicketsController < ApplicationController
 		@errors = []
 		@tickets = []
 
+		Log.make_log "Beginning reserving of tickets", "User", curr_user.id, curr_user.id
+
 		# Is the ticket being sold by a vendor or being purchased online?
 		if !buying #&& curr_user.has_permission?(:ticket_selling)
 			render :partial => "tickets/reserve"
