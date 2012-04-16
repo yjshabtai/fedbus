@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
 	has_and_belongs_to_many :roles
 	has_many :tickets
 	has_many :buses
+	has_many :invoices
 
 	validates_presence_of :first_name, :last_name, :userid, :email
 	validates_presence_of :student_number, :student_number_confirmation, :if => :student_number_changed?

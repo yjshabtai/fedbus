@@ -1,3 +1,5 @@
+require 'keys.rb'
+
 class UsersController < ApplicationController
 	before_filter permission_required(:users), :except => [:login, :logout, :new, :create], :unless => lambda { |c| c.logged_in? && c.current_user.to_param == c.params[:id] }
 
@@ -14,15 +16,15 @@ class UsersController < ApplicationController
   	end
   	
   	@tickets = @tickets.select { |t| t.status == "reserved" }
-  	if !@tickets.empty?
-  		@invoice = session[:invoice] ? Invoice.find(session[:invoice]) : nil
-  		if !@invoice
-  			@invoice = Invoice.make_invoice @tickets
-  			session[:invoice] = @invoice.id.to_s
-  		elsif @invoice.tickets != @tickets
-  			@invoice.update_invoice(@tickets)
-  		end
-  	end
+  	#if !@tickets.empty?
+  	#	@invoice = session[:invoice] ? Invoice.find(session[:invoice]) : nil
+  	#	if !@invoice
+  	#		@invoice = Invoice.make_invoice @tickets
+  	#		session[:invoice] = @invoice.id.to_s
+  	#	elsif @invoice.tickets != @tickets
+  	#		@invoice.update_invoice(@tickets)
+  	#	end
+  	#end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -127,5 +129,23 @@ class UsersController < ApplicationController
     @tickets.each do |tick|
       @price = @price + tick.ticket_price
     end
+
+    # If an invoice is not created then one must be created
+    # If one is created then it is updated
+    invoices = Invoice.where(:status => 'unpaid', :user_id => @curr_user.id)
+    if invoices.size == 0
+      @invoice = Invoice.make_invoice @tickets
+    elsif invoices.size == 1
+      @invoice = invoices[0].update_invoice @tickets
+    else
+      # There should never be more than one active invoice for a user
+      # ERROR WHAT NOW BITCH?
+    end
+
+    @amount = (@price * 100).to_i.to_s
+    @timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+    @merchant_id = Keys.merchant_id
+    @hash = Digest::SHA1.hexdigest(@invoice.id.to_s + '|' + @amount + '|' + @timestamp + '|' + Keys.admeris_hash)
+
   end
 end
