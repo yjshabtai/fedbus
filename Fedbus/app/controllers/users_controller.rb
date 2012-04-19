@@ -146,6 +146,7 @@ class UsersController < ApplicationController
     @timestamp = Time.now.strftime("%Y%m%d%H%M%S")
     @merchant_id = Keys.merchant_id
     @hash = Digest::SHA1.hexdigest(@invoice.id.to_s + '|' + @amount + '|' + @timestamp + '|' + Keys.admeris_hash)
-
+    
+    @resp_url = request.referer + 'response'
   end
 end

@@ -1,0 +1,51 @@
+<div class="cartbox">
+
+	<% if @invoice.total > 0.00 %>
+		<div class="pay_area">
+			<form method="post" action="https://test.admeris.com/ccgateway/cc/processor.do">
+				<input type="hidden" name="merchantId" value=<%= @merchant_id %> />
+				<input type="hidden" name="timestamp" value=<%= @timestamp %> />
+				<input type="hidden" name="requestCode" value="singlePurchase" />
+				<input type="hidden" name="hash" value=<%= @hash %> />
+
+				<!-- ORDER DETAIL FIELDS -->
+				<input type="hidden" name="marketSegmentCode" value="I" />
+				<input type="hidden" name="orderId" value=<%= @invoice.id.to_s %> />
+				<input type="hidden" name="amount" value=<%= @amount %> />
+
+
+				<div class="card_field">
+					<label for="creditCardNumber">Credit Card Number</label>
+					<input type="textarea" id="creditCardNumber" name="creditCardNumber" value="4242424242424242" />
+				</div>
+
+				<div class="card_field">
+					<label for="expiryDate">Expiry Date (MMYY)</label>
+					<input type="textarea" id="expiryDate" name="expiryDate" value="1212" />
+				</div>
+
+				<div class="card_field">
+					<label for="cvv2">cvv2</label>
+					<input type="textarea" id="cvv2" name="cvv2" value="111" />
+				</div>
+
+				<div class="card_field">
+					<label for="street">Address</label>
+					<input type="textarea" id="street" name="street" value="500 Easy Street" />
+				</div>
+
+				<div class="card_field">
+					<label for="zip">Postal Code</label>
+					<input type="textarea" id="zip" name="zip" value="A1B2C3" />
+				</div>
+
+				<!-- RESPONSE URL: -->
+				<input type="hidden" name="redirectUrl" value=<%= @resp_url %> />
+
+				<input class="confirm" type="submit" value="Confirm" />
+
+			</form>
+		</div>
+	<% end %>
+
+</div>

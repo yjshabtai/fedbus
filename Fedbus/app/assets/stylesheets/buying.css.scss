@@ -32,9 +32,27 @@
 
 	table {
 		width: 100%;
+		.price {
+			text-align: right;
+		}
 	}
-	button {
+	.linetwo {
+		font-size: 80%;
+	}
+	.chkout, .confirm {
 		@include button($buttoncolor);
+		float: right;
+	}
+
+	.card_field {
+		width: 200px;
+		label {
+			font-size: 78%;
+			margin-left: 2px;
+		}
+		input {
+			margin-top: 0;
+		}
 	}
 }
 

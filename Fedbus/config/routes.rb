@@ -1,4 +1,10 @@
 FedbusRails32::Application.routes.draw do
+  get "payment/cart"
+
+  get "payment/payinfo"
+
+  get "payment/response"
+
   ActiveAdmin.routes(self)
 
   resources :notices
@@ -95,7 +101,9 @@ FedbusRails32::Application.routes.draw do
   # See how all your routes lay out with "rake routes"
   match 'login', :to => 'users#login', :as => "login"
   match 'logout', :to => 'users#logout', :as => "logout"
-  match 'cart', :to => 'users#cart', :as => "cart"
+  match 'cart', :to => 'payment#cart', :as => "cart"
+  match 'checkout', :to => 'payment#payinfo', :as => 'checkout'
+  match 'response', :to => 'payment#admeris_response', :as => "response"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
