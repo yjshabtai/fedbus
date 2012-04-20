@@ -42,7 +42,7 @@ class PaymentController < ApplicationController
     @merchant_id = Keys.merchant_id
     @hash = Digest::SHA1.hexdigest(@invoice.id.to_s + '|' + @amount + '|' + @timestamp + '|' + Keys.admeris_hash)
 
-  	@resp_url = request.env['HTTP_HOST'] + '/response'
+  	@resp_url = 'http://' + request.env['HTTP_HOST'] + '/response'
   end
 
   def admeris_response
