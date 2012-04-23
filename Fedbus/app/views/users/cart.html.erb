@@ -19,7 +19,7 @@
 
 	<br/>
 
-	<% if @invoice.total > 0.00 %>
+	<% if @price > 0.00 %>
 		<div class="pay_area">
 			<form method="post" action="http://test.admeris.com/store/checkout/ccpayment.jsp">
 				<input type="hidden" name="merchantId" value=<%= @merchant_id %> />

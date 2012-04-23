@@ -2,48 +2,51 @@
 
 <div class="cartbox">
 	<h2>SHOPPING CART</h2>
-	<table>
-		<tr>
-			<th></th>
-			<th></th>
-			<th class="price">Price</th>
-			<th></th>
-		</tr>
-
-		<% @tickets.each do |tick| %>
-
+	<% if !@tickets.empty? %>
+		<table>
 			<tr>
-				<td><%= (@tickets.index(tick) + 1).to_s + '.' %></td>
-				<td>
-					<%= tick.bus.name %></br>
-					<span class="linetwo"><%= tick.description %></span>
-				</td>
-				<td class="price">
-					<span class="ticket_price"><%= number_to_currency(tick.ticket_price) %></br></span>
-					<% if tick.return_of || tick.return_ticket %>
-						
-						<span class="linetwo">
-							(<%= number_to_currency(tick.ticket_price + 1) %> - $1.00)
-						</span>
-					<% end %>
-				</td>
-				<td>X</td>
-
+				<th></th>
+				<th></th>
+				<th class="price">Price</th>
+				<th></th>
 			</tr>
 
-		<% end %>
+			<% @tickets.each do |tick| %>
 
-		<tr>
-			<th></th>
-			<th></th>
-			<th class="price">Total: <span class="ticket_price"><%= number_to_currency(@curr_user.cart_total) %></span></th>
-			<th></th>
-		</tr>
+				<tr>
+					<td><%= (@tickets.index(tick) + 1).to_s + '.' %></td>
+					<td>
+						<%= tick.bus.name %></br>
+						<span class="linetwo"><%= tick.description %></span>
+					</td>
+					<td class="price">
+						<span class="ticket_price"><%= number_to_currency(tick.ticket_price) %></br></span>
+						<% if tick.return_of || tick.return_ticket %>
+							
+							<span class="linetwo">
+								(<%= number_to_currency(tick.ticket_price + 1) %> - $1.00)
+							</span>
+						<% end %>
+					</td>
+					<td>X</td>
 
-	</table>
+				</tr>
 
-	<button class="chkout">Checkout</button>
+			<% end %>
 
+			<tr>
+				<th></th>
+				<th></th>
+				<th class="price">Total: <span class="ticket_price"><%= number_to_currency(@curr_user.cart_total) %></span></th>
+				<th></th>
+			</tr>
+
+		</table>
+
+		<button class="chkout">Checkout</button>
+	<% else %>
+		Your shopping cart is currently empty.
+	<% end %>
 </div>
 
 <div class="ajax">

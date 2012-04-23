@@ -25,7 +25,7 @@ class PaymentController < ApplicationController
     @tickets.each do |tick|
       @price = @price + tick.ticket_price
     end
-    
+
     # If an invoice is not created then one must be created
     # If one is created then it is updated
     invoice_id = session[:invoice]
@@ -33,7 +33,10 @@ class PaymentController < ApplicationController
       @invoice = Invoice.make_invoice @tickets
       session[:invoice] = @invoice.id
     else
-      @invoice = Invoice.find(invoice_id).update_invoice @tickets
+      @invoice = Invoice.find(invoice_id)
+      @invoice.tickets = @invoice.tickets.select {|t| @tickets.include?(t) }
+
+      @invoice = @invoice.update_invoice @tickets
       session[:invoice] = @invoice.id
     end
 
@@ -46,5 +49,6 @@ class PaymentController < ApplicationController
   end
 
   def admeris_response
+  	@tst = params
   end
 end

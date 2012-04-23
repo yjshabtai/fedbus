@@ -31,6 +31,10 @@ class Invoice < ActiveRecord::Base
 
 	# Locks the invoice
 	def lock
-
+		self.status = :locked
+		
+		if self.save
+			Log.make_log "Invoice #{self.id.to_s} has been locked", "Invoice", self.id
+		end
 	end
 end
