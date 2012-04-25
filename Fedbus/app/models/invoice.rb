@@ -16,7 +16,9 @@ class Invoice < ActiveRecord::Base
 		i.user_id = tickets[0].user_id
 		i.total = tickets.inject(0) { |result, t| result + t.ticket_price }
 
-		i.save
+		if i.save
+			Log.make_log "Invoice #{i.id.to_s} has been created", "Invoice", i.id
+		end
 		i
 	end
 	
@@ -24,7 +26,10 @@ class Invoice < ActiveRecord::Base
 		self.tickets = tickets
 		self.total = tickets.inject(0) { |result, t| result + t.ticket_price }
 		self.updated_at = Time.now
-		self.save
+		
+		if self.save
+			Log.make_log "Invoice #{self.id.to_s} has been updated", "Invoice", self.id
+		end
 
 		self
 	end
