@@ -60,13 +60,15 @@ ActiveAdmin.register Destination do
     attributes_table do
       row :name
       row :description
+      row :address
+      row :location_description
       row :created_at
       row :updated_at
     end
     active_admin_comments
   end
 
-   # Creates a sidebar that displays the destination's trips
+  # Creates a sidebar that displays the destination's trips
   sidebar :trips, :only => :show do
     table_for destination.trips do
         column :name do |trip|
@@ -81,6 +83,8 @@ ActiveAdmin.register Destination do
   	f.inputs "Details" do
   		f.input :name
   		f.input :description
+      f.input :address
+      f.input :location_description
   	end
   	f.buttons
   end

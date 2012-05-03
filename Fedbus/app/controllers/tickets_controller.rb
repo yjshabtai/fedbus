@@ -1,3 +1,5 @@
+require 'keys.rb'
+
 class TicketsController < ApplicationController
 	
 	# TODO: Document the control flow for buying and selling tickets here
@@ -8,44 +10,77 @@ class TicketsController < ApplicationController
 	def is_own_ticket?
 		logged_in? && Ticket.find(params[:id]).user == current_user
 	end
-  
-	# GET /tickets/buy
-	# GET /tickets/buy.json
-	def buy
-		@dates = Bus.where(:status => :open).collect {|b| b.date }.uniq
-	end
 	
 	# POST /tickets/reserve
 	def reserve
 		# Get post data
-		dir = params[:dep_id] == '0' ? :from_waterloo : :to_waterloo
-		bus = Bus.find(params[:bus_id])
-		return_bus = params[:ret] == 'true' ? bus.find_return : false
+		bus = Bus.find(params[:dep_id])
+		dir = params[:from_uw] == 'true' ? "from_waterloo" : "to_waterloo"
 		buying = params[:buying] == 'true' ? true : false
-		
+		all_returns = bus.find_returns
+
+		# Get returning data
+		returning = false
+		bus_r = 0
+		dir_r = ""
+		if params[:ret] == 'true'
+			returning = true
+			bus_r = Bus.find(params[:ret_id])
+			dir_r = dir == "from_waterloo" ? "to_waterloo" : "from_waterloo"
+
+			# If the user cheated with the post data then disallow it
+			if !all_returns.include?(bus_r)
+				# error render partial tickets/doesn'texist
+			end
+		end
+
 		curr_user = current_user
 		@errors = []
 		@tickets = []
 
-		# Is the ticket being sold by a vendor or being bought online?
-		if !buying && curr_user.has_permission?(:ticket_selling)
+		# Is the ticket being sold by a vendor or being purchased online?
+		if !buying #&& curr_user.has_permission?(:ticket_selling)
+			#Log.make_log "Beginning sale of tickets", "User", buyer, curr_user.id
 
+			render :partial => "tickets/reserve"
 		else
-			if !curr_user.tickets_for_date(bus.date).empty?
-				@errors << "You already have a ticket on " + bus.date.to_s
-			end
-			if return_bus && !curr_user.tickets_for_date(return_bus.date).empty?
-				@errors << "You already have a ticket on " + return_bus.date.to_s
+			Log.make_log "Began reserving of tickets", "User", curr_user.id, curr_user.id
+
+			active_tickets = curr_user.tickets_for_date(bus.date)
+			active_tickets_r = returning ? curr_user.tickets_for_date(bus_r.date) : []
+
+			if !active_tickets.empty?
+				# Iff one active ticket is on this day and
+				# The active ticket's bus is a valid return bus or
+				# 	the active ticket's bus' valid return buses include the to be purchased ticket and
+				#   there are no more tickets being purchased
+				# then the new ticket can be reserved
+				if (active_tickets.length == 1 && 
+					( all_returns.include?(active_tickets[0].bus) ||
+						( active_tickets[0].bus.find_returns.include?(bus) &&
+						!returning )
+					)) == false
+					@errors << "You already have a ticket on #{bus.date.strftime("%a, %B %e")}"
+					Log.make_log "Tried to buy an invalid ticket", "User", curr_user.id, curr_user.id
+				end
 			end
 
+			# You can not return from somewhere and then have another ticket on the same day if that ticket is not what the return ticket is returning from
+			if !active_tickets_r.empty?
+				@errors << "You already have a ticket on #{bus_r.date.strftime("%a, %B %e")}"
+				Log.make_log "Tried to buy an invalid ticket", "User", curr_user.id, curr_user.id
+			end
+
+			# If there are no errors then the tickets are reserved
 			if @errors.empty?
-				@tickets << Ticket.make_ticket(curr_user, bus, dir)
-				if return_bus
-					@tickets << Ticket.make_ticket(curr_user, return_bus, (params[:dep_id] == '0' ? :to_waterloo : :from_waterloo))
-					@tickets.each do |tick|
-						tick.ticket_price = tick.bus.ticket_price - 1.0
-						tick.save
-					end
+				ticket = Ticket.make_ticket curr_user, bus, dir
+				@tickets << ticket
+
+				if returning
+					ticket_r = Ticket.make_ticket curr_user, bus_r, dir_r
+					ticket.return_ticket = ticket_r
+					ticket.save
+					@tickets << ticket_r
 				end
 			end
 
@@ -63,77 +98,19 @@ class TicketsController < ApplicationController
 	# GET /tickets/pay_area
 	def pay_area
 	end
-		#if params[:departure] == '0'
-		#	dir = :from_waterloo
-		#else
-		#	dir = :to_waterloo
-		#end
-		#@errors = nil
-		#@tickets_on_date = []
-		#@tickets = []
-		#
-		#if params[:departure] == '0'
-		#	dir2 = :to_waterloo
-		#else
-		#	dir2 = :from_waterloo
-		#end
-		#
-		#bus = Bus.find(params[:bus][:id])
-		#date = bus.date
-		#
-		#return_trip = true unless params[:trip][:return] != '1'
-		#
-		## TODO: Don't name vars X2, name them X_return, more verbose, but #fewer WTF/min
-		#if return_trip
-		#	buses_for_bus2 = Bus.where("destination_id = ? and date >= ?", bus.#destination_id, bus.date + 1.days)
-		#	if buses_for_bus2.length == 1
-		#		bus2 = buses_for_bus2[0]
-		#	else
-		#		bus2 = (buses_for_bus2.inject { |d1, d2| d1.date <= d2.date ? #d1 : d2 })
-		#	end
-		#	# TODO: Why is this bus2 and not something like bus2.date?  #Explain or fix
-		#	date2 = bus2
-		#end
-		#
-		#user =
-		#	if current_user.has_permission?(:ticket_selling) && params[:student#] && params[:student] != ""
-		#		User.find(params[:student])
-		#	else
-		#		current_user
-		#	end
-		#	
-		#if user.tickets_for_date(date).count > 0
-		#	@errors = "You already have a ticket on " + date.to_s
-		#	return
-		#end
-		#
-		#if return_trip && user.tickets_for_date(date2).count > 0
-		#	@errors = "You already have a ticket on " + date2.to_s
-		#	return
-		#end
-		#
-		#new_ticket = Ticket.make_ticket(user, bus, dir, (user == current_user ?# nil : current_user))
-		#if return_trip
-		#	new_ticket.ticket_price = bus.ticket_price - 1
-		#	new_ticket.save
-		#	
-		#	new_ticket2 = Ticket.make_ticket(user, bus2, dir2, (user == #current_user ? nil : current_user))
-		#	new_ticket2.ticket_price = bus2.ticket_price - 1
-		#	new_ticket2.save
-		#	@tickets << new_ticket2
-		#end
-		#@tickets << new_ticket
-		#
-		#redirect_to user_path(user)
-	#end
-
-
   
   	# GET /tickets/sell
   	# GET /tickets/sell.json
   	def sell
   		
   	end
+  
+	# GET /tickets/buy
+	# GET /tickets/buy.json
+	def buy
+		@dates = Bus.where(:status => :open).select{|b| !b.maximum_seats || b.available_tickets('from_waterloo') > 0 || b.available_tickets('to_waterloo') > 0 }.collect {|b| b.date }.uniq
+		@gmapkey = Keys.gmap
+	end
 
 	def find_user
 
@@ -148,9 +125,9 @@ class TicketsController < ApplicationController
 	def find_dests
 
 		if params[:dep_id] == '0'
-			@destinations = Bus.where(:date => params[:date], :status => :open).collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]}
+			@destinations = Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets('from_waterloo') > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]}
 		else
-			bus = Bus.where(:date => params[:date], :status => :open, :destination_id => params[:dep_id]).first
+			bus = Bus.find(params[:dep_id])
 			@destinations = [['UW Campus, ' + bus.return_time.strftime("%k:%M"), bus.id]]
 		end
 
@@ -161,29 +138,48 @@ class TicketsController < ApplicationController
 	def ticket_data
 
 		@bus = Bus.find(params[:bus_id])
+		@destination = @bus.destination
 		@arrive = (params[:dep_id] == '0') ? @bus.arrive_time : @bus.return_time
 		@depart = params[:dep_id] == '0' ? @bus.depart_time : @bus.arrive_time
-		
-		@return_bus = @bus.find_return
-		if @return_bus
-			@r_arrive = (params[:dep_id] == '0') ? @return_bus.return_time : @return_bus.arrive_time
-			@r_depart = params[:dep_id] == '0' ? @return_bus.arrive_time : @return_bus.depart_time
-		end
+		@ticks_avail = params[:dep_id] == '0' ? @bus.available_tickets('from_waterloo') : @bus.available_tickets('to_waterloo')
+
+		@return_dates = @bus.find_returns(params[:dep_id] == '0' ? true : false).select{|rb| !rb.maximum_seats || rb.available_tickets(params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo') > 0}.collect{|rb| rb.date}.uniq
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying4") : (render :partial => "tickets/selling4")
 	end
 
 	# Gets the locations for departure on a given date
 	def find_deps
-		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.destination.id]})
+		# This will list all of the buses with departures on this date.
+		# There will be at least one because the date selector uses a similar formula.
+		@departures = [['UW Campus', 0]] + (Bus.where(:date => params[:date], :status => :open).select{|b| !b.maximum_seats || b.available_tickets('to_waterloo') > 0}.collect {|b| [b.destination.name + ', ' + b.arrive_time.strftime("%k:%M"), b.id]})
 
 		params[:buying] == 'true' ? (render :partial => "tickets/buying2") : (render :partial => "tickets/selling2")
+	end
+
+	# Gets the return buses for the given bus and date
+	def find_returns
+		bus = Bus.find(params[:bus_id])
+		@return_buses = bus.find_returns(params[:dep_id] == '0' ? true : false).select{|rb| (!rb.maximum_seats || rb.available_tickets(params[:dep_id] == '0' ? 'to_waterloo' : 'from_waterloo') > 0) && rb.date == params[:ret_date].to_date}.collect{|rb| [(params[:dep_id] != '0' ? 'UW Campus' : rb.destination.name) + ', ' + ((params[:dep_id] == '0') ? rb.arrive_time.strftime("%k:%M") : rb.depart_time.strftime("%k:%M")), rb.id]}
+
+		render :partial => "tickets/buying5"
+	end
+
+	# Gets the chosen return bus' info
+	def ticket_data_r
+		@bus_r = Bus.find(params[:rb_id])
+		@destination_r = @bus_r.destination
+		@arrive_r = (params[:dep_id] == '0') ? @bus_r.return_time : @bus_r.arrive_time
+		@depart_r = (params[:dep_id] == '0') ? @bus_r.arrive_time : @bus_r.depart_time
+		@ticks_avail_r = params[:dep_id] == '0' ? @bus_r.available_tickets('to_waterloo') : @bus_r.available_tickets('from_waterloo')
+
+		render :partial => "tickets/buying6"
 	end
 
 	# Gets the price of the ticket to be purchased if return trip is selected
 	def update_price
 		bus = Bus.find(params[:bus_id])
-		@ticket_price = params[:ret] == 'true' ? ((bus.ticket_price - 1.0) * 2.0) : bus.ticket_price
+		@ticket_price = params[:ret] == 'true' ? ((bus.ticket_price - 1.0) + (Bus.find(params[:rbus_id]).ticket_price - 1.0)) : bus.ticket_price
 
 		render :partial => "tickets/ticketprice"
 	end

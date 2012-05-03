@@ -1,14 +1,35 @@
 <br/><%= @bus.name %><br/>
-Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/><br/>
 
-<% if @return_bus %>
-	<%= check_box("return", "trip", :class => "return_chk") %> Return trip on <%= @return_bus.date.strftime("%a, %B %e") %>
+Departure Time: <%= @depart.strftime("%k:%M") %> Arrival Time: <%= @arrive.strftime("%k:%M") %><br/>
+
+<% if @bus.maximum_seats %>
+	<%= @ticks_avail %> tickets available.
 	<br/>
-	<%= @return_bus.name %><br/>
-	Departure Time: <%= @r_depart.strftime("%k:%M") %> Arrival Time: <%= @r_arrive.strftime("%k:%M") %><br/><br/>
+<% end %>
+
+<div class="expander">?</div>
+<br/>
+
+<% if !@return_dates.empty? %>
+	
+	Return On:<br/>
+	<%= select("return", "date", @return_dates, {:include_blank => 'Do not return'}, :class => "return_time") %><br/>
+
+	<div class="return_from">
+	</div>
+
+	<br/>
 <% end %>
 
 
 Cost: <span class="ticket_price"><%= number_to_currency(@bus.ticket_price) %></span><br/><br/>
 
 <button class="cart_ticket">Add To Cart</button>
+
+<!-- the info pane for the selected bus -->
+<div class="info_pane">
+	<h3><%= @destination.name %></h3>
+	<div class="info_addr"><%= @destination.address %></div>
+	<div class="info_map"></div>
+	<div class="info_desc"><%= @destination.location_description %></div>
+</div>

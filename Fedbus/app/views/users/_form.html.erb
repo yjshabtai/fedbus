@@ -1,3 +1,5 @@
+
+
 <%= form_for(@user) do |f| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
@@ -24,30 +26,14 @@
     <%= f.email_field :email %>
   </div>
   <div class="field">
-	<%= f.label :student_number %><br />
-	<%= f.password_field :student_number %>
+  	<%= f.label :student_number %><br />
+  	<%= f.password_field :student_number %>
   </div>
   <div class="field">
-	<%= f.label :student_number_confirmation %><br />
-	<%= f.password_field :student_number_confirmation %>
+  	<%= f.label :student_number_confirmation %><br />
+  	<%= f.password_field :student_number_confirmation %>
   </div>
   <br />
-
-  <!-- <% if logged_in? %>
-    <div class="field">
-      <%= f.label :table_count, "Rows per table" %><br />
-      <%= f.text_field :table_count %>
-    </div>
-  <% end %>
-  
-  <% if logged_in? && current_user.has_permission?(:roles) %>
-	<p>
-	  Roles<br />
-	  <% for role in Role.all %>
-		<%= check_box_tag "user[role_ids][]", role.id, @user.role_ids.include?(role.id) %><%= role.name %><br />
-	  <% end %>
-	</p>
-  <% end %>-->
   
   <div class="actions">
     <%= f.submit %>

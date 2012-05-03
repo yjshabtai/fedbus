@@ -1,0 +1,19 @@
+<br/><%= @bus_r.name %><br/>
+
+Departure Time: <%= @depart_r.strftime("%k:%M") %> Arrival Time: <%= @arrive_r.strftime("%k:%M") %><br/>
+
+<% if @bus_r.maximum_seats %>
+	<%= @ticks_avail_r %> tickets available.
+	<br/>
+<% end %>
+
+<div class="expander_r">?</div>
+<br/>
+
+<!-- the info pane for the selected return bus -->
+<div class="info_pane_r">
+	<h3><%= @destination_r.name %></h3>
+	<div class="info_addr_r"><%= @destination_r.address %></div>
+	<div class="info_map_r"></div>
+	<div class="info_desc_r"><%= @destination_r.location_description %></div>
+</div>

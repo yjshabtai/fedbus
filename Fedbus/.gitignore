@@ -12,3 +12,4 @@ Thumbs.db
 .bundle
 bin
 vendor/bundle
+keys.rb

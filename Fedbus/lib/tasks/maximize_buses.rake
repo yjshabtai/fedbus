@@ -7,6 +7,6 @@ task :maximize_buses => :environment do
 	buses.each do |b|
 		b.maximize_seats
 
-		puts "Maximizing the number of seats for bus #{b.id} to #{b.maximum_seats}"
+		puts "Maximizing the number of seats for bus #{b.id}."
 	end
 end

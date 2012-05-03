@@ -18,13 +18,35 @@
 	</table>
 
 	<br/>
-	<div class="pay_area">
-		payment form goes here
-	</div>
 
-	<% if !@tickets.empty? %>
+	<% if @price > 0.00 %>
+		<div class="pay_area">
+			<form method="post" action="http://test.admeris.com/store/checkout/ccpayment.jsp">
+				<input type="hidden" name="merchantId" value=<%= @merchant_id %> />
+				<input type="hidden" name="timestamp" value=<%= @timestamp %> />
+				<input type="hidden" name="requestCode" value="singlePurchase" />
+				<input type="hidden" name="hash" value=<%= @hash %> />
+
+				<!-- ORDER DETAIL FIELDS -->
+				<input type="hidden" name="marketSegmentCode" value="I" />
+				<input type="hidden" name="orderId" value=<%= @invoice.id.to_s %> />
+				<input type="hidden" name="amount" value=<%= @amount %> />
+
+				<input type="textarea" name="creditCardNumber" value="4242424242424242" />
+				<input type="textarea" name="expiryDate" value="1212" />
+				<input type="textarea" name="cvv2" value="111" />
+				<input type="textarea" name="street" value="500 Easy Street" />
+				<input type="textarea" name="zip" value="A1B2C3" />
+
+				<!-- RESPONSE URL: -->
+				<input type="hidden" name"redirectUrl" value=<%= @resp_url %> />
+
+			</form>
+		</div>
+
 		<button class="cart_pay">Pay</button>
 	<% end %>
+
 </div>
 
 <div class="ajax">

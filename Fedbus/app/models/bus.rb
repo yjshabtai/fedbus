@@ -33,7 +33,12 @@ class Bus < ActiveRecord::Base
 	def maximize_seats
 		# the number of seats per bus and how many buses are filled
 		seats_per_bus = 48
-		filled_buses = tickets.count / seats_per_bus
+
+		# finds the direction with the most amount of tickets
+		max_tickets = [sold_tickets(:from_waterloo), sold_tickets(:to_waterloo)].max
+
+		# How many buses filled so far
+		filled_buses = max_tickets / seats_per_bus
 
 		# The maximum amount of seats is the current number of buses needed + whatever is needed to fill up the last bus if it is unfilled
 		self.maximum_seats = filled_buses * seats_per_bus + 
@@ -42,49 +47,40 @@ class Bus < ActiveRecord::Base
 		self.save
 	end
 
-	# Returns a return bus if one exists
-	def find_return
+	# Returns the possible return buses
+	def find_returns (to_waterloo = false)
+
+		# Array of all of the return buses
+		buses = []
+
 		# If it is a friday and the next sunday is a reading week then the return bus will be the following sunday
 		# If the next sunday is not a reading week then it will be on that sunday
-		if date.wday == 5 
-			ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:destination_id => destination.id).find_by_date(date + 9.days) : Bus.where(:destination_id => destination.id).find_by_date(date + 2.days)
-		else
-			nil
-		end
-	end
-	
-	# TODO: Document this fucntion: earliest date of what?
-	def self.earliest_date_after date
-		buses = Bus.where("date >= ? and status = 'open'", date)
-
-		if buses.empty? 
-			date
-		else
-			if buses.length == 1
-				buses[0].date
+		if date.wday == 5
+			if to_waterloo
+				buses = buses + (ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days)) : Bus.where(:date => (date + 2.days)))
 			else
-				(buses.inject { |d1, d2| d1.date <= d2.date ? d1 : d2 }).date
+				buses = buses + (ReadingWeek.is_reading_week?(date + 2.days) ? Bus.where(:date => (date + 9.days), :destination_id => destination_id) : Bus.where(:date => (date + 2.days), :destination_id => destination_id))
 			end
 		end
-	end
-	
-	# TODO: Document this fucntion: earliest date of what?
-	def self.earliest_date_before date
-		buses = Bus.where("date < ? and status = 'open'", date)
 
-		if buses.empty? 
-			date
+		# If there is a later bus returning on the same day then it is a valid return bus
+		if to_waterloo
+			buses = buses + Bus.where("date = ? AND arrive_time > ?", date, arrive_time)
 		else
-			if buses.length == 1
-				buses[0].date
-			else
-				(buses.inject { |d1, d2| d1.date >= d2.date ? d1 : d2 }).date
-			end
+			buses = buses + Bus.where("date = ? AND depart_time > ? AND destination_id = ?", date, return_time, destination_id)
 		end
+
+		buses
 	end
 	
+	# Returns the number of valid tickets for the given direction (to_waterloo or from_waterloo)
+	def sold_tickets(direction)
+		 (tickets.select {|t| t.direction == direction && t.status_valid? }).count
+	end
+
+	# Returns the number of available tickets for the given direction (to_waterloo or from_waterloo)
 	def available_tickets(direction)
-		return self.maximum_seats - (self.tickets.select { |t| t.direction == direction and t.status_valid? }).count
+		maximum_seats ? (maximum_seats - (tickets.select {|t| t.direction == direction && t.status_valid? }).count) : nil
 	end
 	
 	def destination_name

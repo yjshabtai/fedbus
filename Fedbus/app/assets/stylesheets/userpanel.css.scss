@@ -1,0 +1,21 @@
+/*
+	Style Sheet for the user panel stuff
+*/
+
+.userbox {
+	width: 900px;
+	margin: 50px auto 0;
+
+	text-align: center;
+
+	.field input {
+		border: 2px solid $buttoncolor;
+
+		&:focus {
+			border-color: tint($buttoncolor, 60%);
+		}
+	}
+	.actions input {
+		@include button($buttoncolor);
+	}
+}
