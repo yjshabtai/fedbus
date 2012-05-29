@@ -10,7 +10,7 @@ class InvoicesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @invoices }
+      format.json { render :json => @invoices }
     end
   end
 
@@ -21,7 +21,7 @@ class InvoicesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @invoice }
+      format.json { render :json => @invoice }
     end
   end
 
@@ -37,11 +37,11 @@ class InvoicesController < ApplicationController
 
     respond_to do |format|
       if @invoice.update_attributes(params[:invoice])
-        format.html { redirect_to @invoice, notice: 'Invoice was successfully updated.' }
+        format.html { redirect_to @invoice, :notice => 'Invoice was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @invoice.errors, status: :unprocessable_entity }
+        format.html { render :action => "edit" }
+        format.json { render :json => @invoice.errors, :status => :unprocessable_entity }
       end
     end
   end

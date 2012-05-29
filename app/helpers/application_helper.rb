@@ -230,7 +230,7 @@ module ApplicationHelper
 				# Destroy Column
 				if curr_user.has_permission? :admin
 					html << '<td class="td_links">'.html_safe
-					html << (link_to "Destroy", obj, confirm: 'Are you sure?', method: :delete).html_safe
+					html << (link_to "Destroy", obj, :confirm => 'Are you sure?', :method => :delete).html_safe
 					html << '</td>'.html_safe
 				end
 		

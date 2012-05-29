@@ -8,7 +8,7 @@ class NoticesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @notices }
+      format.json { render :json => @notices }
     end
   end
 
@@ -19,7 +19,7 @@ class NoticesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @notice }
+      format.json { render :json => @notice }
     end
   end
 
@@ -30,7 +30,7 @@ class NoticesController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @notice }
+      format.json { render :json => @notice }
     end
   end
 
@@ -46,11 +46,11 @@ class NoticesController < ApplicationController
 
     respond_to do |format|
       if @notice.save
-        format.html { redirect_to @notice, notice: 'Notice was successfully created.' }
-        format.json { render json: @notice, status: :created, location: @notice }
+        format.html { redirect_to @notice, :notice => 'Notice was successfully created.' }
+        format.json { render :json => @notice, :status => :created, :location => @notice }
       else
-        format.html { render action: "new" }
-        format.json { render json: @notice.errors, status: :unprocessable_entity }
+        format.html { render :action => "new" }
+        format.json { render :json => @notice.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -62,11 +62,11 @@ class NoticesController < ApplicationController
 
     respond_to do |format|
       if @notice.update_attributes(params[:notice])
-        format.html { redirect_to @notice, notice: 'Notice was successfully updated.' }
+        format.html { redirect_to @notice, :notice => 'Notice was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @notice.errors, status: :unprocessable_entity }
+        format.html { render :action => "edit" }
+        format.json { render :json => @notice.errors, :status => :unprocessable_entity }
       end
     end
   end

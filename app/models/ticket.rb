@@ -23,12 +23,12 @@ class Ticket < ActiveRecord::Base
 		t.ticket_price = bus.ticket_price
 		
 		if t.save
-			TicketLog.make_log (seller ? ("Ticket sold by vendor") : "Ticket reserved by system"), t, seller
-			Log.make_log (seller ? ("Ticket sold") : "Ticket reserved"), "Ticket", t.id, (seller ? seller.id : 0)
+			TicketLog.make_log((seller ? "Ticket sold by vendor" : "Ticket reserved by system"), t, seller)
+			Log.make_log((seller ? "Ticket sold" : "Ticket reserved"), "Ticket", t.id, (seller ? seller.id : 0))
 
 			t
 		else
-			TicketLog.make_log (seller ? ("Ticket sale failed by vendor") : "Ticket reservation failed by system"), t, seller
+			TicketLog.make_log((seller ? "Ticket sale failed by vendor" : "Ticket reservation failed by system"), t, seller)
 			
 			false
 		end
