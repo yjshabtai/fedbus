@@ -4,6 +4,7 @@
 /db/schema.rb
 /config/session_secret
 /config/deploy.rb
+/config/database.yml
 *~
 *.swp
 *.vim
