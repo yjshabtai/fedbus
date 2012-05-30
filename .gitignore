@@ -5,6 +5,7 @@
 /config/session_secret
 /config/deploy.rb
 /config/database.yml
+/config/initalizers/secret_token.rb
 *~
 *.swp
 *.vim
@@ -14,4 +15,4 @@ Thumbs.db
 .bundle
 bin
 vendor/bundle
-keys.rb
+/lib/keys.rb
