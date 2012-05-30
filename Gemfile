@@ -9,6 +9,9 @@ gem 'rails', '3.2.0'
 # Sqlite3 is used in development as its the Rails simple default
 gem 'sqlite3'
 
+# mysql2 is used for pruduction databases
+gem 'mysql2'
+
 
 # Gems used only for assets and not required
 # in production environments by default.
