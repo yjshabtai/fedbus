@@ -72,3 +72,19 @@ manager = Role.new
 manager.name = 'Manager'
 manager.permissions = Permission.all - [p5,p7,p12]
 manager.save
+
+dest = Destination.new
+dest.name = 'York Mills Station, Toronto'
+dest.save
+
+dest = Destination.new
+dest.name = 'Downsview Station, Toronto'
+dest.save
+
+dest = Destination.new
+dest.name = 'Richmond Hill Centre Terminal'
+dest.save
+
+dest = Destination.new
+dest.name = 'McCowan Station, Toronto'
+dest.save
