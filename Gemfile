@@ -26,6 +26,8 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+gem 'therubyracer', :require => 'v8'
+
 gem 'jquery-rails'
 
 # CAS authentication
