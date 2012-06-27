@@ -3,7 +3,6 @@
 /db/*.sqlite3
 /db/schema.rb
 /config/session_secret
-/config/deploy.rb
 /config/database.yml
 /config/initalizers/secret_token.rb
 *~
