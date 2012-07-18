@@ -1,5 +1,5 @@
 set :application, "FedBus"
-set :repository,  "git@github.com:bradkrane/fedbus.git"
+set :repository,  "git@github.com:yjshabtai/fedbus.git"
 
 set :scm, :git
 
