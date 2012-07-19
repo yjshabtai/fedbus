@@ -50,6 +50,9 @@ after "deploy:create_symlink" do
   assets.symlinks.update
 end
 
+task :prod, :on_error => :continue do
+    # your code here
+end
 
 task :dev do
   server "www-app.fs.uwaterloo.ca", :web, :app
