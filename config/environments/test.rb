@@ -34,4 +34,7 @@ FedbusRails32::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # See everything in the log (default is :info)
+  config.log_level = :debug
 end
